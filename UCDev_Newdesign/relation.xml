@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<relations>
+  <relation>
+    <rel-type>association</rel-type>
+    <rel1-id>Actor 1</rel1-id>
+    <rel2-id>Usecase 1</rel2-id>
+  </relation>
+</relations>
