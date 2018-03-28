@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import nuttraceabilitymatrix.RequirementTraceability;
 
 /**
  *
@@ -357,7 +358,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
-        traceabilityMetrixToHTML();
+         traceabilityMetrixToHTML();
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
@@ -506,7 +507,6 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void traceabilityMetrixToHTML() {
-        new ReqTraceabilityMatrix().requirementTraceabilityMatrix();
-        new RelationTraceabilityMatrix().RelationTraceabilityMatrix();
+        new RequirementTraceability().RequirementTraceability();
     }
 }

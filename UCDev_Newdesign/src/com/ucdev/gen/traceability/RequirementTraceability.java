@@ -1,4 +1,9 @@
-package com.ucdev.gen.traceability;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package nuttraceabilitymatrix;
 
 import java.io.BufferedWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,16 +22,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  *
- * @author UCDEV
+ * @author Sorrasak Kaewyao
  */
-public class ReqTraceabilityMatrix {
+public class RequirementTraceability {
 
-     public void requirementTraceabilityMatrix() {
-
-        try {
-            ReqTraceabilityMatrix req = new ReqTraceabilityMatrix();
+    /**
+     * @param args the command line arguments
+     */
+    public void RequirementTraceability(){
+           try {
+            RequirementTraceability req = new RequirementTraceability();
+            
 
             List<String> relColumn = new ArrayList();//เก็บcolumnทั้งหมดแบบไม่คัดตัวซ้ำออก
             List<String> relRow = new ArrayList(); //เก็บRowทั้งหมดแบบไม่คัดตัวซ้ำออก
@@ -36,14 +45,18 @@ public class ReqTraceabilityMatrix {
             Map noCol = new HashMap(); //map ตำแหน่งโดยcolumnของแต่ละแถว
 
             Map map1 = new HashMap(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้ ซึ่งในนี้เป็นแบบmultivalues
-
-            File fXmlFile = new File("requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+            String pathXML = "requirement\\requirementXML\\";
+            File fXmlFile = new File(pathXML+"requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
             doc.getDocumentElement().normalize();
             NodeList nList = doc.getElementsByTagName("requirement");
-
+            
+            RelationTraceability trace = new RelationTraceability();
+            
+            int allCountOfRel = 0;
+            
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 Node nNode = nList.item(temp);
                 ArrayList colList = new ArrayList();
@@ -51,6 +64,16 @@ public class ReqTraceabilityMatrix {
                     Element eElement = (Element) nNode;
                     relRow.add(eElement.getAttribute("id"));//add to arraylist
                     String row = eElement.getAttribute("id");//prepare for put
+                    int numRel = eElement.getElementsByTagName("relation").getLength();
+                    
+                    allCountOfRel = allCountOfRel+numRel;
+                    int firstNum = allCountOfRel-numRel;
+                    int lastNum = allCountOfRel;
+                    
+                    System.out.println(firstNum+" : "+lastNum);
+                    req.createHTML(row);
+                    trace.createRelationToHTML(temp, row,firstNum,lastNum);
+                    
                     for (int ucList = 0; ucList < eElement.getElementsByTagName("uc").getLength(); ucList++) {
                         relColumn.add(eElement.getElementsByTagName("uc").item(ucList).getTextContent());//add to arraylist
                         String col = eElement.getElementsByTagName("uc").item(ucList).getTextContent();//prepare for put
@@ -117,7 +140,7 @@ public class ReqTraceabilityMatrix {
                 List listAllColumn = (ArrayList) noCol.get(relRowResult.get(j));
                 for (int k = 0; k < listAllColumn.size(); k++) {
                     int listColCom = listAllColumn.get(k).hashCode();
-                    intArray.set(listColCom, "<td>✓</td>");//setตำแหน่งใน<td></td>ตามตำแหน่งที่ระบุไว้โดยใช้✓
+                    intArray.set(listColCom, "<td>*</td>");//setตำแหน่งใน<td></td>ตามตำแหน่งที่ระบุไว้โดยใช้✓
 
                 }
 
@@ -125,8 +148,8 @@ public class ReqTraceabilityMatrix {
                 for (int i = 0; i < intArray.size(); i++) {
                     tdAdd = tdAdd + intArray.get(i);
                 }
-
-                trRow = "<td style='background-color: #4da6ff;color: white;font-family: sans-serif;'>" + relRowResult.get(j) + "</td>" + tdAdd;
+                String linkToRelation = relRowResult.get(j)+".html";
+                trRow = "<td style='background-color: #4da6ff;color: white;font-family: sans-serif;'><a href='"+linkToRelation+"'>" + relRowResult.get(j) + "</a></td>" + tdAdd;
                 tdAdd = "";
                 trList.add(trRow);
                 trRow = "";
@@ -174,7 +197,8 @@ public class ReqTraceabilityMatrix {
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
-            File f = new File("requirement.html");
+            String pathHTML = "requirement\\requirementHTML\\";
+            File f = new File(pathHTML+"traceabilitymatrix.html");
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(f));
@@ -189,5 +213,17 @@ public class ReqTraceabilityMatrix {
         } catch (Exception e) {
             e.printStackTrace();
         }
+   }
+    
+    public void createHTML(String name) throws IOException{
+        File htmlFile = new File(name+".html");
+        BufferedWriter bw = new BufferedWriter(new FileWriter(htmlFile));
+        String html = "<html><title>Traceability Matrix Requirement</title></html>";
+              if(htmlFile.canWrite()){
+                  System.out.println("created html !!!");  
+                }
+                bw.write(html);
+                bw.close();
+            }
     }
-}
+    

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ucdev.gen.traceability;
+package nuttraceabilitymatrix;
 
 import java.io.BufferedWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,10 +27,15 @@ import javax.swing.JOptionPane;
  *
  * @author Sorrasak Kaewyao
  */
-public class RelationTraceabilityMatrix {
+public class RelationTraceability{
 
-    public void RelationTraceabilityMatrix() {
-        try {
+    /**
+     * @param args the command line arguments
+     */
+    public  void createRelationToHTML(int numOfReq,String nameHTMLofReq,int firstOfRel,int lastOfRel) {
+       
+        
+       try {
             List<String> relColumn = new ArrayList(); //เก็บcolumnทั้งหมดแบบไม่คัดตัวซ้ำออก
             List<String> relRow = new ArrayList(); //เก็บRowทั้งหมดแบบไม่คัดตัวซ้ำออก
             List<String> relColumnResult = new ArrayList(); //เก็บcolumnที่เอาตัวซ้ำออกแล้ว
@@ -40,24 +45,32 @@ public class RelationTraceabilityMatrix {
             List<String> typeRelation = new ArrayList(); //เก็บชนิดของความสัมพันธ์แล้วแยกเป็นตัวอักษรI E A
 
             Map<String, String> map1 = new HashMap<String, String>(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้
-
-            File fXmlFile = new File("relation.xml"); //ดึงไฟล์ xml จาก path นี้
+             String pathXML = "requirement\\requirementXML\\";
+            File fXmlFile = new File(pathXML+"requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
             doc.getDocumentElement().normalize();
 
-            NodeList nList = doc.getElementsByTagName("relation");
-            for (int temp = 0; temp < nList.getLength(); temp++) {
+            NodeList nList = doc.getElementsByTagName("requirement");
+            NodeList relList = doc.getElementsByTagName("relation");
+            
+            for (int temp = numOfReq; temp < numOfReq+1 ; temp++) {
                 Node nNode = nList.item(temp);
+                //Element eElement = (Element) nNode;
+                
+                for (int i = firstOfRel; i < lastOfRel ; i++) {
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) nNode;
-                    relRow.add(eElement.getElementsByTagName("rel2-id").item(0).getTextContent());
-                    relColumn.add(eElement.getElementsByTagName("rel1-id").item(0).getTextContent());
-                    typeRelation.add(eElement.getElementsByTagName("rel-type").item(0).getTextContent());
-                    String row = eElement.getElementsByTagName("rel1-id").item(0).getTextContent();
-                    String col = eElement.getElementsByTagName("rel2-id").item(0).getTextContent();
+                    Node relNode = relList.item(i);
+                    Element relElement = (Element) relNode;
+                    
+                    relRow.add(relElement.getElementsByTagName("rel2-id").item(0).getTextContent());
+                    relColumn.add(relElement.getElementsByTagName("rel1-id").item(0).getTextContent());
+                    typeRelation.add(relElement.getElementsByTagName("rel-type").item(0).getTextContent());
+                    String row = relElement.getElementsByTagName("rel1-id").item(0).getTextContent();
+                    String col = relElement.getElementsByTagName("rel2-id").item(0).getTextContent();
                     map1.put(col, row);
+                }
                 }
             }
             String firstTdColumn = "<td></td>";
@@ -158,12 +171,14 @@ public class RelationTraceabilityMatrix {
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
-            File f = new File("relation.html");
+            String pathHTML = "requirement\\requirementHTML\\";
+            File f = new File(pathHTML+nameHTMLofReq+".html");
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(f));
                 if(f.canWrite()){
-                    JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
+                    //JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
+                    System.out.println("success!!!");
                 }
                 bw.write(html);
                 bw.close();
@@ -174,7 +189,6 @@ public class RelationTraceabilityMatrix {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+   }
     }
-
-}
+    

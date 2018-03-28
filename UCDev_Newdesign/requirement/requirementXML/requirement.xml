@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<requirements>
+
+  <requirement id="req01">
+     <actor>
+      <at actor_id="001">Actor 1</at>
+     </actor>
+
+    <usecase>
+      <uc usecase_id="001">Usecase 1</uc>
+      <uc usecase_id="002">Usecase 2</uc>
+    </usecase>
+
+      <relations>
+        <relation>
+          <rel-type>association</rel-type>
+          <rel1-id>Actor 1</rel1-id>
+          <rel2-id>Usecase 1</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 1</rel1-id>
+          <rel2-id>Usecase 2</rel2-id>
+         </relation>
+      </relations>
+  </requirement>
+
+    <requirement id="req02">
+    <actor>
+      <at actor_id="001">Actor 1</at>
+      <at actor_id="002">Actor 2</at>
+    </actor>
+
+    <usecase>
+      <uc usecase_id="001">Usecase 1</uc>
+      <uc usecase_id="002">Usecase 2</uc>
+      <uc usecase_id="003">Usecase 3</uc>
+    </usecase>
+
+    <relations>
+        <relation>
+          <rel-type>association</rel-type>
+          <rel1-id>Actor 2</rel1-id>
+          <rel2-id>Usecase 2</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 1</rel1-id>
+          <rel2-id>Usecase 3</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>association</rel-type>
+          <rel1-id>Usecase 3</rel1-id>
+          <rel2-id>Usecase 6</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 6</rel1-id>
+          <rel2-id>Usecase 5</rel2-id>
+        </relation>
+
+
+   </relations>
+
+  </requirement>
+<requirement id="req03">
+    <actor>
+      <at actor_id="001">Actor 3</at>
+      <at actor_id="002">Actor 4</at>
+    </actor>
+
+    <usecase>
+      <uc usecase_id="001">Usecase 2</uc>
+      <uc usecase_id="002">Usecase 3</uc>
+      <uc usecase_id="003">Usecase 4</uc>
+    </usecase>
+
+    <relations>
+        <relation>
+          <rel-type>association</rel-type>
+          <rel1-id>Actor 3</rel1-id>
+          <rel2-id>Usecase 2</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 2</rel1-id>
+          <rel2-id>Usecase 3</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 3</rel1-id>
+          <rel2-id>Usecase 4</rel2-id>
+        </relation>
+
+   </relations>
+
+  </requirement>
+
+<requirement id="req04">
+    <actor>
+      <at actor_id="001">Actor 5</at>
+      <at actor_id="002">Actor 6</at>
+    </actor>
+
+    <usecase>
+      <uc usecase_id="001">Usecase 5</uc>
+      <uc usecase_id="002">Usecase 7</uc>
+      <uc usecase_id="003">Usecase 9</uc>
+    </usecase>
+
+    <relations>
+        <relation>
+          <rel-type>association</rel-type>
+          <rel1-id>Actor 5</rel1-id>
+          <rel2-id>Usecase 5</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 5</rel1-id>
+          <rel2-id>Usecase 7</rel2-id>
+        </relation>
+        <relation>
+          <rel-type>inherit</rel-type>
+          <rel1-id>Usecase 7</rel1-id>
+          <rel2-id>Usecase 9</rel2-id>
+        </relation>
+
+   </relations>
+
+  </requirement>
+
+
+
+
+</requirements>
