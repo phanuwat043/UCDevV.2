@@ -8,13 +8,12 @@ import com.ucdev.draw.control.DrawUsecase;
 import com.ucdev.draw.control.Extends;
 import com.ucdev.draw.control.Include;
 import com.ucdev.draw.control.Inherit;
-import com.ucdev.gen.traceability.RelationTraceabilityMatrix;
-import com.ucdev.gen.traceability.ReqTraceabilityMatrix;
 import com.ucdev.ui.prop.ActorPropPanelForm;
 import com.ucdev.ui.prop.UsecasePropPanelForm;
-import com.ucdev.gen.report.GenActor;
-import com.ucdev.gen.report.GenUseCase;
 import com.ucdev.gen.report.GenPDF;
+import com.ucdev.gen.report.TransAtInfoHtml;
+import com.ucdev.gen.report.TransUcInfoHtml;
+import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.ui.prop.DataDict_UI;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -29,7 +28,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import nuttraceabilitymatrix.RequirementTraceability;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+
 
 /**
  *
@@ -322,7 +323,15 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void gen_usecase_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_usecase_jmenuActionPerformed
-        genUsecaseToHTML();
+        try {
+            new TransUcInfoHtml().GenHTML();
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_gen_usecase_jmenuActionPerformed
 
     private void associationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_associationBtnActionPerformed
@@ -354,7 +363,15 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_gen_pdf_jmenuActionPerformed
 
     private void gen_actor_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_actor_jmenuActionPerformed
-        genActorToHTML();
+        try {
+            new TransAtInfoHtml().GenHTML();
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
@@ -484,14 +501,7 @@ public class MainForm extends javax.swing.JFrame {
         datadict_ui.show();
     }
 
-    private void genActorToHTML() {
-        new GenActor().show();
-    }
-
-    private void genUsecaseToHTML() {
-        new GenUseCase().show();
-    }
-
+  
     private void genPDF() {
         new GenPDF().show();
     }

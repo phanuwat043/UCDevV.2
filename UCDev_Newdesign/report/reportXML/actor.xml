@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actors>
+  <actor actor_id="001">
+    <actor_name>Actor 1</actor_name>
+    <actor_description>jjjjjj</actor_description>
+    <actor_type>Person</actor_type>
+  </actor>
+
+  <actor actor_id="002">
+    <actor_name>Actor 2</actor_name>
+    <actor_description>ffffff</actor_description>
+    <actor_type>Person</actor_type>
+  </actor>
+
+  <actor actor_id="003">
+    <actor_name>Actor 3</actor_name>
+    <actor_description>dddddd</actor_description>
+    <actor_type>Person</actor_type>
+  </actor>
+
+</actors>

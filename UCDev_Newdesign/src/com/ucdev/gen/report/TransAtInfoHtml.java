@@ -34,24 +34,18 @@ import org.xml.sax.SAXException;
  *
  * @author FilmKhonDee
  */
-public class TransUcInfoHtml{
-    public void GenHTML() throws ParserConfigurationException, SAXException, IOException {
-         String pathXML = "report\\reportXML\\";
-        File fXmlFile = new File(pathXML + "usecase.xml"); //ดึงไฟล์ xml จาก path นี้
+public class TransAtInfoHtml{
+    public void GenHTML() throws SAXException, IOException, ParserConfigurationException {
+        String pathXML = "report\\reportXML\\";
+        File fXmlFile = new File(pathXML + "actor.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
-        NodeList nList = doc.getElementsByTagName("usecase");
-        ArrayList usecaseName = new ArrayList();
-        ArrayList usecaseGoal = new ArrayList();
-        ArrayList usecasePre = new ArrayList();
-        ArrayList usecasePost = new ArrayList();
-        ArrayList usecasePri = new ArrayList();
-        ArrayList usecaseObject = new ArrayList();
-        ArrayList usecaseFlow = new ArrayList();
-        ArrayList usecaseAlt = new ArrayList();
-        ArrayList usecaseExc = new ArrayList();
+        NodeList nList = doc.getElementsByTagName("actor");
+        ArrayList actorName = new ArrayList();
+        ArrayList actorDes = new ArrayList();
+        ArrayList actorType = new ArrayList();
         
         String createBodyHTML = "";
         
@@ -59,21 +53,17 @@ public class TransUcInfoHtml{
             Node nNode = nList.item(temp);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
-                usecaseName.add(eElement.getElementsByTagName("usecase_name").item(0).getTextContent());//add to arraylist
-                usecaseGoal.add(eElement.getElementsByTagName("usecase_goal").item(0).getTextContent());//add to arraylist
-                usecasePre.add(eElement.getElementsByTagName("usecase_pre").item(0).getTextContent());//add to arraylist
-                usecasePost.add(eElement.getElementsByTagName("usecase_post").item(0).getTextContent());//add to arraylist
-                usecasePri.add(eElement.getElementsByTagName("usecase_pri").item(0).getTextContent());//add to arraylist
+                actorName.add(eElement.getElementsByTagName("actor_name").item(0).getTextContent());//add to arraylist
+                actorDes.add(eElement.getElementsByTagName("actor_description").item(0).getTextContent());//add to arraylist
+                actorType.add(eElement.getElementsByTagName("actor_type").item(0).getTextContent());//add to arraylist
             }
         }
  
         for (int temp = 0; temp < nList.getLength(); temp++) {//for list from arraylist
             String bodyForm = "<article>\n"
-                    + "    <p> <strong> Use Case Name  </strong> : <i>" + usecaseName.get(temp) + "</i> </p>\n"
-                    + "    <p> <strong> Use Case Goal  </strong> : <i>" + usecaseGoal.get(temp) + "</i> </p>\n"
-                    + "    <p> <strong> Pre-Condition  </strong> : <i>" + usecasePre.get(temp) + "</i> </p>\n"
-                    + "    <p> <strong> Post-Condition  </strong> : <i>" + usecasePost.get(temp) + "</i> </p>\n"
-                    + "    <p> <strong> Priority  </strong> : <i>" + usecasePri.get(temp) + "</i> </p>\n"
+                    + "    <p> <strong> Actor Name </strong> : <i>" + actorName.get(temp) + "</i> </p>\n"
+                    + "    <p> <strong> Description </strong> : <i>" + actorDes.get(temp) + "</i> </p>\n"
+                    + "    <p> <strong> Type </strong> : <i>" + actorType.get(temp) + "</i> </p>\n"
                     + "</article><hr size=1 color=grey width=87% align=right>";
             createBodyHTML = createBodyHTML+bodyForm;
         }
@@ -132,7 +122,7 @@ public class TransUcInfoHtml{
                 + "  \n"
                 + "<nav>\n"
                 + "  <ul>\n"
-                + "    <li><p>ACTOR</p></li>\n"
+                + "    <li><p>USE CASE</p></li>\n"
                 + "  </ul>\n"
                 + "</nav>\n"
                 + "\n"
@@ -145,9 +135,8 @@ public class TransUcInfoHtml{
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-        
         String pathHTML = "report\\reportHTML\\";
-        File f = new File(pathHTML + "UsecaseInfo.html");
+        File f = new File(pathHTML + "ActorInfo.html");
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
@@ -160,5 +149,8 @@ public class TransUcInfoHtml{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
+
+

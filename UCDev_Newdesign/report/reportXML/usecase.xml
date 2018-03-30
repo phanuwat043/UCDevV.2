@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<usecases>
+  <usecase usecase_id="001">
+    <usecase_name>Usecase 1</usecase_name>
+    <usecase_goal>lklk</usecase_goal>
+    <usecase_pre>kkkk</usecase_pre>
+    <usecase_post>kkkk</usecase_post>
+    <usecase_pri>Medium</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@1e6aecbc</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+  <usecase usecase_id="002">
+    <usecase_name>Usecase 2</usecase_name>
+    <usecase_goal>nnnn</usecase_goal>
+    <usecase_pre>nnnn</usecase_pre>
+    <usecase_post>nnnn</usecase_post>
+    <usecase_pri>Low</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@42ac9a7b</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+  <usecase usecase_id="002">
+    <usecase_name>Usecase 2</usecase_name>
+    <usecase_goal>nnnn</usecase_goal>
+    <usecase_pre>nnnn</usecase_pre>
+    <usecase_post>nnnn</usecase_post>
+    <usecase_pri>Low</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@42ac9a7b</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+  <usecase usecase_id="002">
+    <usecase_name>Usecase 2</usecase_name>
+    <usecase_goal>nnnn</usecase_goal>
+    <usecase_pre>nnnn</usecase_pre>
+    <usecase_post>nnnn</usecase_post>
+    <usecase_pri>Low</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@42ac9a7b</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+  <usecase usecase_id="002">
+    <usecase_name>Usecase 2</usecase_name>
+    <usecase_goal>nnnn</usecase_goal>
+    <usecase_pre>nnnn</usecase_pre>
+    <usecase_post>nnnn</usecase_post>
+    <usecase_pri>Low</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@42ac9a7b</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+  <usecase usecase_id="002">
+    <usecase_name>Usecase 2</usecase_name>
+    <usecase_goal>nnnn</usecase_goal>
+    <usecase_pre>nnnn</usecase_pre>
+    <usecase_post>nnnn</usecase_post>
+    <usecase_pri>Low</usecase_pri>
+    <usecase_object>com.ucdev.draw.control.DrawUsecase@42ac9a7b</usecase_object>
+    <flow_of_event/>
+    <alternative_flow/>
+    <exception_flow/>
+  </usecase>
+</usecases>

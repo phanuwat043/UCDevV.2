@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package nuttraceabilitymatrix;
+package com.ucdev.gen.traceability;
 
 import java.io.BufferedWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
