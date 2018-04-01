@@ -193,7 +193,7 @@ public class RequirementTraceability {
                     + "}\n"
                     + "</style></head>"
                     + "<body>"
-                    + "<h1>Traceability Matrix (Requirement : Actor&Usecase)</h1>"
+                    + "<h1>Traceability Matrix</h1>"
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";

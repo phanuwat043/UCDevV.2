@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <requirements>
 
-  <requirement id="req01">
+  <requirement id="SAL-REQ-01" description="พนักงานสามารถสร้างรายการการขายได้">
      <actor>
       <at actor_id="001">Actor 1</at>
      </actor>
@@ -25,7 +25,7 @@
       </relations>
   </requirement>
 
-    <requirement id="req02">
+    <requirement id="SAL-REQ-02"  description="พนักงานสามารถเพิ่มสินค้าลงในรายการการขายสินค้าได้">
     <actor>
       <at actor_id="001">Actor 1</at>
       <at actor_id="002">Actor 2</at>
@@ -63,7 +63,7 @@
    </relations>
 
   </requirement>
-<requirement id="req03">
+<requirement id="SAL-REQ-03" description="พนักงานสามารถลบสินค้าออกจากรายการการขายสินค้าได้">
     <actor>
       <at actor_id="001">Actor 3</at>
       <at actor_id="002">Actor 4</at>
@@ -96,7 +96,7 @@
 
   </requirement>
 
-<requirement id="req04">
+<requirement id="SAL-REQ-04" description="ระบบสามารถบันทึกรายการการขายสินค้าได้">
     <actor>
       <at actor_id="001">Actor 5</at>
       <at actor_id="002">Actor 6</at>
@@ -133,3 +133,4 @@
 
 
 </requirements>
+

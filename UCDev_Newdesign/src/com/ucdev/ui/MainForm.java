@@ -13,6 +13,7 @@ import com.ucdev.ui.prop.UsecasePropPanelForm;
 import com.ucdev.gen.report.GenPDF;
 import com.ucdev.gen.report.TransAtInfoHtml;
 import com.ucdev.gen.report.TransUcInfoHtml;
+import com.ucdev.gen.traceability.RequirementCategory;
 import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.ui.prop.DataDict_UI;
 import java.awt.event.WindowAdapter;
@@ -264,7 +265,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu1.setText("Traceability");
+        jMenu1.setText("Requirement");
 
         TraceMatrix_jMenu.setText("Traceability Matrix");
         TraceMatrix_jMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -375,7 +376,17 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
-         traceabilityMetrixToHTML();
+  
+        try {
+            traceabilityMetrixToHTML();
+            requirementCategoryToHTML();
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
@@ -518,5 +529,8 @@ public class MainForm extends javax.swing.JFrame {
 
     private void traceabilityMetrixToHTML() {
         new RequirementTraceability().RequirementTraceability();
+    }
+    private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
+        new RequirementCategory().createRequirementCategory();
     }
 }

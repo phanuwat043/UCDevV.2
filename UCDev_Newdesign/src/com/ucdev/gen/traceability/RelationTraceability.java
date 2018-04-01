@@ -142,7 +142,7 @@ public class RelationTraceability{
                 resultTable = resultTable + "<tr>" + trList.get(i) + "</tr>";
             }
 
-            String html = "<html><title>Traceability Matrix Usecase</title>"
+            String html = "<html><title>Traceability Matrix Requirement</title>"
                     + "<head><style>\n"
                     + "table {\n"
                     + "    border-collapse: collapse;\n"
@@ -167,7 +167,7 @@ public class RelationTraceability{
                     + "}\n"
                     + "</style></head>"
                     + "<body>"
-                    + "<h1>Traceability Matrix (Usecase : Actor)</h1>"
+                    + "<h1>"+nameHTMLofReq+"</h1>"
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
