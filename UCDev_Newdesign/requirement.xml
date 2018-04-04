@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<requirements>
+  <requirement id="req01">
+    <actor>
+      <at actor_id="001">Actor 1</at>
+    </actor>
+    <usecase>
+      <uc usecase_id="001">Usecase 1</uc>
+      <uc usecase_id="002">Usecase 2</uc>
+    </usecase>
+  </requirement>
+</requirements>
