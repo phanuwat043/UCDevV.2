@@ -1,14 +1,11 @@
 package com.ucdev.save.control;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,21 +20,37 @@ import org.xml.sax.SAXException;
  */
 public class FileController {
 
+    private static FileController instance = null;
+
+    private static String FILE_NAME;
+
+    public static FileController getInstance() {
+        if (instance == null) {
+            instance = new FileController();
+        }
+        return instance;
+    }
+
     public void createFolder() {
-        Path path = Paths.get("C:\\UCDev");
-        //if directory exists?
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                //fail to create directory
-                e.printStackTrace();
+        if (getFILE_NAME() != null) {
+            Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME());
+            //if directory exists?
+            if (!Files.exists(path)) {
+                try {
+                    Files.createDirectories(path);
+                } catch (IOException e) {
+                    //fail to create directory
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public File readFolder() {
-        File root = new File("C:\\UCDev\\");
+        File root = null;
+        if (getFILE_NAME() != null) {
+            root = new File("C:\\UCDev\\" + getFILE_NAME());
+        }
         return root;
     }
 
@@ -59,7 +72,11 @@ public class FileController {
         }
     }
 
-    public static void main(String[] args) {
-        new FileController().createFolder();
+    public String getFILE_NAME() {
+        return FILE_NAME;
+    }
+
+    public void setFILE_NAME(String FILE_NAME) {
+        FileController.FILE_NAME = FILE_NAME;
     }
 }

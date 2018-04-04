@@ -1,5 +1,6 @@
 package com.ucdev.db.control;
 
+import com.ucdev.save.control.FileController;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -31,6 +32,8 @@ import org.w3c.dom.Element;
  * @author filmz
  */
 public class DBControl {
+
+    FileController instance = FileController.getInstance();
 
     private static final String dbURL = "jdbc:derby://localhost:1527/UCDev;create=true;user=root;password=root";
 
@@ -109,7 +112,7 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult("C:\\UCDev\\actor.xml");
+            StreamResult result = new StreamResult(instance.readFolder() + "\\actor.xml");
             transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
@@ -324,7 +327,7 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult("C:\\UCDev\\usecase.xml");
+            StreamResult result = new StreamResult(instance.readFolder() + "\\usecase.xml");
             transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
@@ -417,7 +420,7 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult("C:\\UCDev\\requirement.xml");
+            StreamResult result = new StreamResult(instance.readFolder() + "\\requirement.xml");
             transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
@@ -703,6 +706,7 @@ public class DBControl {
             stmt.execute("DELETE FROM extends");
             stmt.execute("DELETE FROM include");
             stmt.execute("DELETE FROM inherit");
+            stmt.execute("DELETE FROM requirement");
             stmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();

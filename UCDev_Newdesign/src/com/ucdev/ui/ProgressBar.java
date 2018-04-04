@@ -1,6 +1,10 @@
 package com.ucdev.ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -15,7 +19,7 @@ public class ProgressBar extends javax.swing.JFrame {
     public ProgressBar() {
         initComponents();
         setIconImage();
-        
+
         jProgressBar1.setMinimum(MY_MINIMUM);
         jProgressBar1.setMaximum(MY_MAXIMUM);
         jProgressBar1.setStringPainted(true);
@@ -155,35 +159,48 @@ public class ProgressBar extends javax.swing.JFrame {
     private void runProgress() {
         Thread runner = new Thread() {
             public void run() {
-                counter = MY_MINIMUM;
-                while (counter <= MY_MAXIMUM) {
-                    Runnable runme = new Runnable() {
-                        public void run() {
-                            jProgressBar1.setValue(counter);
-                            
-                            if(counter == 90){
-                                progress_txt.setText("Complete...");
+
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+                    counter = MY_MINIMUM;
+                    while (counter <= MY_MAXIMUM) {
+                        Runnable runme = new Runnable() {
+                            public void run() {
+                                jProgressBar1.setValue(counter);
+
+                                if (counter == 90) {
+                                    progress_txt.setText("Complete...");
+                                }
+                                if (counter == 100) {
+                                    new MainForm().show();
+                                    dispose();
+                                }
                             }
-                            if (counter == 100) {
-                                new MainForm().show();
-                                dispose();
-                            }
+                        };
+                        SwingUtilities.invokeLater(runme);
+                        counter++;
+                        try {
+                            Thread.sleep(20);
+                        } catch (Exception ex) {
+                            //System.out.println(ex.getMessage());
                         }
-                    };
-                    SwingUtilities.invokeLater(runme);
-                    counter++;
-                    try {
-                        Thread.sleep(20);
-                    } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
                     }
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(ProgressBar.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(ProgressBar.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(ProgressBar.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(ProgressBar.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
         runner.start();
     }
-    
-    private void setIconImage(){
+
+    private void setIconImage() {
         //setIconImage(new ImageIcon(getClass().getResource("\\com\\ucdev\\image\\Actor.gif")).getImage());
     }
 }

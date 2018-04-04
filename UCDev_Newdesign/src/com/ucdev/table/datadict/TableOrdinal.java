@@ -47,6 +47,11 @@ public class TableOrdinal extends javax.swing.JPanel {
                 addMouseClicked(evt);
             }
         });
+        add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addActionPerformed(evt);
+            }
+        });
 
         delete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/ucdev/image/if_minus_309051.png"))); // NOI18N
         delete.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -89,6 +94,10 @@ public class TableOrdinal extends javax.swing.JPanel {
         int select_row = ordinal_table.getSelectedRow();
         model.removeRow(select_row);
     }//GEN-LAST:event_deleteMouseClicked
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

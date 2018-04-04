@@ -8,13 +8,15 @@ import com.ucdev.draw.control.DrawUsecase;
 import com.ucdev.draw.control.Extends;
 import com.ucdev.draw.control.Include;
 import com.ucdev.draw.control.Inherit;
-import com.ucdev.gen.traceability.RelationTraceabilityMatrix;
-import com.ucdev.gen.traceability.ReqTraceabilityMatrix;
 import com.ucdev.ui.prop.ActorPropPanelForm;
 import com.ucdev.ui.prop.UsecasePropPanelForm;
-import com.ucdev.gen.report.GenActor;
-import com.ucdev.gen.report.GenUseCase;
 import com.ucdev.gen.report.GenPDF;
+import com.ucdev.gen.report.TransAtInfoHtml;
+import com.ucdev.gen.report.TransUcInfoHtml;
+import com.ucdev.gen.traceability.RequirementCategory;
+import com.ucdev.gen.traceability.RequirementTraceability;
+import com.ucdev.requirement.RequirementUI;
+import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -29,6 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -262,7 +266,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu1.setText("Traceability");
+        jMenu1.setText("Requirement");
 
         TraceMatrix_jMenu.setText("Traceability Matrix");
         TraceMatrix_jMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -357,7 +361,13 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
-        traceabilityMetrixToHTML();
+        try {
+            traceabilityMetrixToHTML();
+            requirementCategoryToHTML();
+        } catch (ParserConfigurationException ex) {
+        } catch (SAXException ex) {
+        } catch (IOException ex) {
+        }
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
@@ -403,8 +413,20 @@ public class MainForm extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void createPanel() {
-        panel.getSplitPane("untitle", draw_panel);
-        setEnableButton(true);
+        if (FileController.getInstance().getFILE_NAME() == null) {
+            String file = JOptionPane.showInputDialog("Please input your project name : ");
+            FileController.getInstance().setFILE_NAME(file);
+            if (file != null && !"".equals(file)) {
+                FileController.getInstance().createFolder();
+                panel.setFile(FileController.getInstance().readFolder());
+                RequirementUI reqUI = new RequirementUI();
+                reqUI.show(true);
+                panel.getSplitPane("untitle", draw_panel);
+                setEnableButton(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Please input your file name");
+            }
+        }
     }
 
     private void setEnableButton(boolean b) {
@@ -484,11 +506,21 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void genActorToHTML() {
-        new GenActor().show();
+        try {
+            new TransAtInfoHtml().GenHTML();
+        } catch (SAXException ex) {
+        } catch (IOException ex) {
+        } catch (ParserConfigurationException ex) {
+        }
     }
 
     private void genUsecaseToHTML() {
-        new GenUseCase().show();
+        try {
+            new TransUcInfoHtml().GenHTML();
+        } catch (ParserConfigurationException ex) {
+        } catch (SAXException ex) {
+        } catch (IOException ex) {
+        }
     }
 
     private void genPDF() {
@@ -506,7 +538,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void traceabilityMetrixToHTML() {
-        new ReqTraceabilityMatrix().requirementTraceabilityMatrix();
-        new RelationTraceabilityMatrix().RelationTraceabilityMatrix();
+        new RequirementTraceability().RequirementTraceability();
+    }
+
+    private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
+        new RequirementCategory().createRequirementCategory();
     }
 }

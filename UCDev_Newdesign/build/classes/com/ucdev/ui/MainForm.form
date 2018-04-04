@@ -76,7 +76,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Traceability"/>
+            <Property name="text" type="java.lang.String" value="Requirement"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="TraceMatrix_jMenu">

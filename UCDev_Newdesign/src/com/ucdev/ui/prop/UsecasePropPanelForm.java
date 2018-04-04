@@ -5,6 +5,7 @@ import com.ucdev.draw.control.DrawUsecase;
 import com.ucdev.model.Alternative;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     private final DBControl db_control = new DBControl();
     private final Alternative atl_map = new Alternative();
     private final DrawUsecase usecase;
-    private DataDictionaryPropUI datadict_ui;
 
     private DefaultTableModel model;
 
@@ -53,7 +53,8 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         remove_exception.setVisible(false);
         add_ext.setVisible(false);
         add_exception.setVisible(false);
-        datadict_btn.setVisible(false);
+
+        readRequirement();
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +74,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        datadict_btn = new javax.swing.JButton();
         cancel_btn = new javax.swing.JButton();
         save_btn = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -95,6 +95,9 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         add_ext = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         uc_id_rel = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        req_combo = new javax.swing.JComboBox<>();
+        req_detail_txt = new javax.swing.JLabel();
 
         jLabel1.setText("Use case ID");
 
@@ -111,13 +114,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         jLabel7.setText("Alterrnative flow");
 
         jLabel8.setText("Exception event");
-
-        datadict_btn.setText("Data dictionary properties...");
-        datadict_btn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                datadict_btnActionPerformed(evt);
-            }
-        });
 
         cancel_btn.setText("Cancel");
 
@@ -280,131 +276,119 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
 
         uc_id_rel.setEditable(false);
 
+        jLabel11.setText("Requirement");
+
+        req_combo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                req_comboMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel11))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(uc_id_rel, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(uc_id_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(req_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(8, 8, 8))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(uc_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(uc_goal_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(uc_pre_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(uc_id_rel, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(uc_id_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(uc_post_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(priority_list, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(38, 38, 38)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(219, 219, 219)
-                                        .addComponent(jLabel7)
-                                        .addGap(178, 178, 178))
-                                    .addComponent(remove_alternative, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(add_alternative, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(remove_event, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(add_event, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(show_alt))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addGap(8, 8, 8))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel9)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(246, 246, 246)
-                                        .addComponent(show_ext)))))
-                        .addGap(18, 18, 18))
+                                    .addComponent(uc_goal_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(uc_pre_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(uc_post_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(priority_list, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(uc_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(45, 45, 45))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cancel_btn)))
+                        .addComponent(req_detail_txt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(cancel_btn)
-                        .addGap(631, 631, 631)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(219, 219, 219)
+                                .addComponent(jLabel7)
+                                .addGap(178, 178, 178))
+                            .addComponent(remove_alternative, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(add_alternative, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(remove_event, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(add_event, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(show_alt))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(246, 246, 246)
+                                .addComponent(show_ext)))))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(datadict_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(remove_exception, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(add_exception, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(add_ext, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel8))
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(37, 37, 37)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(show_alt)
-                                            .addComponent(show_ext)))
-                                    .addComponent(remove_event)
-                                    .addComponent(add_event)
-                                    .addComponent(remove_alternative)
-                                    .addComponent(add_alternative))
-                                .addGap(18, 18, 18)
-                                .addComponent(datadict_btn))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(add_exception)
-                                .addGap(12, 12, 12)
-                                .addComponent(add_ext))
-                            .addComponent(remove_exception)))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(uc_id_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(uc_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(uc_id_rel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(uc_id_rel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel11)
+                            .addComponent(req_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(req_detail_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(uc_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -424,14 +408,38 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(save_btn)
-                            .addComponent(cancel_btn))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(cancel_btn)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(show_alt)
+                                    .addComponent(show_ext)))
+                            .addComponent(remove_event)
+                            .addComponent(add_event)
+                            .addComponent(remove_alternative)
+                            .addComponent(add_alternative)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(add_exception)
+                                .addGap(12, 12, 12)
+                                .addComponent(add_ext))
+                            .addComponent(remove_exception))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void datadict_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datadict_btnActionPerformed
-        openDatadictionary();
-    }//GEN-LAST:event_datadict_btnActionPerformed
 
     private void add_eventActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_eventActionPerformed
 
@@ -516,7 +524,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
 
             remove_exception.setVisible(true);
             add_exception.setVisible(true);
-            datadict_btn.setVisible(true);
             add_ext.setVisible(true);
         }
     }//GEN-LAST:event_show_extActionPerformed
@@ -532,6 +539,11 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_add_extActionPerformed
 
+    private void req_comboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_req_comboMouseClicked
+        //System.out.println(req_combo.getSelectedItem());
+        getSelectReqDetail(req_combo.getSelectedItem().toString());
+    }//GEN-LAST:event_req_comboMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add_alternative;
@@ -540,11 +552,11 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     private javax.swing.JButton add_ext;
     private javax.swing.JTable alternative_table;
     private javax.swing.JButton cancel_btn;
-    private javax.swing.JButton datadict_btn;
     private javax.swing.JTable event_table;
     private javax.swing.JTable exception_table;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -560,6 +572,8 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     private javax.swing.JButton remove_alternative;
     private javax.swing.JButton remove_event;
     private javax.swing.JButton remove_exception;
+    private javax.swing.JComboBox<String> req_combo;
+    private javax.swing.JLabel req_detail_txt;
     private javax.swing.JButton save_btn;
     private javax.swing.JButton show_alt;
     private javax.swing.JButton show_ext;
@@ -570,11 +584,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     private javax.swing.JTextField uc_post_txt;
     private javax.swing.JTextField uc_pre_txt;
     // End of variables declaration//GEN-END:variables
-
-    private void openDatadictionary() {
-        datadict_ui = new DataDictionaryPropUI(usecase,uc_id_txt.getText());
-        datadict_ui.show();
-    }
 
     public void setUsecaseID(Object obj) {
         String id = String.valueOf(obj);
@@ -592,10 +601,11 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         String uc_post = uc_post_txt.getText();
         String uc_priority = priority_list.getItemAt(priority_list.getSelectedIndex());
         String uc_obj = uc_id_rel.getText();
+        String req_id = req_combo.getSelectedItem().toString();
 
         if (!"".equals(uc_id) && uc_id != null) {
             db_control.getConnectDB();
-            db_control.insertUsecaseProperties(uc_id, "req", uc_name, uc_goal, uc_pre, uc_post, uc_priority, uc_obj);
+            db_control.insertUsecaseProperties(uc_id, req_id, uc_name, uc_goal, uc_pre, uc_post, uc_priority, uc_obj);
         } else {
             JOptionPane.showMessageDialog(this, "Input usecase id");
         }
@@ -702,6 +712,34 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
                 }
             }
         } catch (Exception ex) {
+        }
+    }
+
+    public void readRequirement() {
+        db_control.getConnectDB();
+        try {
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select * from requirement");
+            while (results.next()) {
+                String req_id = results.getString(1);
+
+                req_combo.addItem(req_id);
+            }
+        } catch (SQLException ex) {
+        }
+    }
+
+    public void getSelectReqDetail(String req_id) {
+        req_detail_txt.repaint();
+        db_control.getConnectDB();
+        try {
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select req_detail from requirement where req_id='" + req_id + "'");
+            while (results.next()) {
+                String detail = results.getString(1);
+                req_detail_txt.setText("Detail : " + detail);
+            }
+        } catch (SQLException ex) {
         }
     }
 }

@@ -2,25 +2,42 @@ package com.ucdev.ui;
 
 import com.ucdev.draw.control.DrawPanel;
 import com.ucdev.save.control.FileController;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTree;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  *
  * @author UCDev <panuwat16692@gmail.com>
  */
-public class MainPanel extends javax.swing.JPanel {
+public final class MainPanel extends javax.swing.JPanel {
+
+    private DocumentBuilderFactory factory;
+    private DocumentBuilder builder;
+    private JTree tree;
+    private FileTreeModel model;
+    private File file;
 
     public MainPanel() {
         initComponents();
-        new FileController().createFolder();
 
-        FileTreeModel model = new FileTreeModel(new FileController().readFolder());
+        setFile(file);
+    }
+
+    public void setFile(File file) {
+        model = new FileTreeModel(file);
         file_tree.setModel(model);
     }
 
@@ -42,7 +59,7 @@ public class MainPanel extends javax.swing.JPanel {
         file_tree = new javax.swing.JTree();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        xml_txt = new javax.swing.JTextArea();
+        xml_view_tabpane = new javax.swing.JTabbedPane();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
@@ -92,11 +109,8 @@ public class MainPanel extends javax.swing.JPanel {
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
-        xml_txt.setEditable(false);
-        xml_txt.setColumns(20);
-        xml_txt.setRows(5);
-        xml_txt.setText("XML File!!!");
-        jScrollPane4.setViewportView(xml_txt);
+        jScrollPane4.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane4.setViewportView(xml_view_tabpane);
 
         jPanel3.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
@@ -108,11 +122,14 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void file_treeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_file_treeMouseClicked
-        File file = (File) file_tree.getLastSelectedPathComponent();
-        if (file == null) {
+        file_tree.updateUI();
+        File file_select = (File) file_tree.getLastSelectedPathComponent();
+        if (file_select == null) {
 
         } else {
-            getReadData(file.getPath());
+            ViewTree view_tree = new ViewTree();
+            view_tree.setFile_(file_select);
+            view_tree.createUI();
         }
     }//GEN-LAST:event_file_treeMouseClicked
 
@@ -132,7 +149,7 @@ public class MainPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
-    private javax.swing.JTextArea xml_txt;
+    private javax.swing.JTabbedPane xml_view_tabpane;
     // End of variables declaration//GEN-END:variables
 
     public void getSplitPane(String name, DrawPanel p) {
@@ -149,52 +166,6 @@ public class MainPanel extends javax.swing.JPanel {
 
     public int getSelectedIndex() {
         return dataTabpane.getModel().getSelectedIndex();
-    }
-
-    public void setXMLText(String xml) {
-        xml_txt.setText(xml);
-    }
-
-    public void getReadData(String file) {
-        BufferedReader br = null;
-        FileReader fr = null;
-
-        try {
-            String message = "";
-            //br = new BufferedReader(new FileReader(FILENAME));
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
-
-            String sCurrentLine;
-
-            while ((sCurrentLine = br.readLine()) != null) {
-                message += sCurrentLine + "\n";
-                xml_txt.setText(message);
-            }
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        } finally {
-
-            try {
-
-                if (br != null) {
-                    br.close();
-                }
-
-                if (fr != null) {
-                    fr.close();
-                }
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-
-        }
     }
 
     class FileTreeModel implements TreeModel {
@@ -263,5 +234,97 @@ public class MainPanel extends javax.swing.JPanel {
 
         }
 
+    }
+
+    class ViewTree extends DefaultHandler {
+
+        private JTree xmlJTree;
+        DefaultTreeModel treeModel;
+        int lineCounter;
+        DefaultMutableTreeNode base = new DefaultMutableTreeNode("XML Viewer");
+        File file_;
+
+        @Override
+        public void startElement(String uri, String localName, String tagName, Attributes attr) throws SAXException {
+
+            DefaultMutableTreeNode current = new DefaultMutableTreeNode(tagName);
+
+            base.add(current);
+            base = current;
+
+            for (int i = 0; i < attr.getLength(); i++) {
+                DefaultMutableTreeNode currentAtt = new DefaultMutableTreeNode(attr.getLocalName(i) + " = "
+                        + attr.getValue(i));
+                base.add(currentAtt);
+            }
+        }
+
+        @Override
+        public void startDocument() throws SAXException {
+            super.startDocument();
+            base = new DefaultMutableTreeNode("XML Viewer");
+            ((DefaultTreeModel) xmlJTree.getModel()).setRoot(base);
+        }
+
+        public void characters(char[] ch, int start, int length) throws SAXException {
+
+            String s = new String(ch, start, length).trim();
+            if (!s.equals("")) {
+                DefaultMutableTreeNode current = new DefaultMutableTreeNode(s);
+                base.add(current);
+
+            }
+        }
+
+        public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+
+            base = (DefaultMutableTreeNode) base.getParent();
+        }
+
+        @Override
+        public void endDocument() throws SAXException {
+            // Refresh JTree
+            ((DefaultTreeModel) xmlJTree.getModel()).reload();
+            expandAll(xmlJTree);
+        }
+
+        public void expandAll(JTree tree) {
+            int row = 0;
+            while (row < tree.getRowCount()) {
+                tree.expandRow(row);
+                row++;
+            }
+        }
+
+        public void xmlSetUp(File xmlFile) {
+            try {
+                SAXParserFactory fact = SAXParserFactory.newInstance();
+                SAXParser parser = fact.newSAXParser();
+                parser.parse(xmlFile, this);
+
+            } catch (Exception e) {
+            }
+        }
+
+        public void createUI() {
+            treeModel = new DefaultTreeModel(base);
+            xmlJTree = new JTree(treeModel);
+
+            xmlSetUp(getFile_());
+            xml_view_tabpane.addTab(getFile_().getPath(), xmlJTree);
+            xml_view_tabpane.updateUI();
+        }
+
+        public void getSplitPane(String name, JComponent component) {
+            xml_view_tabpane.addTab(name, component);
+        }
+
+        public void setFile_(File file_) {
+            this.file_ = file_;
+        }
+
+        public File getFile_() {
+            return file_;
+        }
     }
 }
