@@ -33,7 +33,7 @@ public class FileController {
 
     public void createFolder() {
         if (getFILE_NAME() != null) {
-            Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME());
+            Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME() + "\\Documents");
             //if directory exists?
             if (!Files.exists(path)) {
                 try {
@@ -50,6 +50,14 @@ public class FileController {
         File root = null;
         if (getFILE_NAME() != null) {
             root = new File("C:\\UCDev\\" + getFILE_NAME());
+        }
+        return root;
+    }
+
+    public File readFolderToExportData() {
+        File root = null;
+        if (getFILE_NAME() != null) {
+            root = new File("C:\\UCDev\\" + getFILE_NAME() + "\\Documents");
         }
         return root;
     }

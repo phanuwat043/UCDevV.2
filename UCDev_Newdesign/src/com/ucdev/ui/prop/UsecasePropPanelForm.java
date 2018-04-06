@@ -540,8 +540,10 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     }//GEN-LAST:event_add_extActionPerformed
 
     private void req_comboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_req_comboMouseClicked
-        //System.out.println(req_combo.getSelectedItem());
-        getSelectReqDetail(req_combo.getSelectedItem().toString());
+        try {
+            getSelectReqDetail(req_combo.getSelectedItem().toString());
+        } catch (Exception ex) {
+        }
     }//GEN-LAST:event_req_comboMouseClicked
 
 
@@ -591,6 +593,7 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     }
 
     private void saveObject() {
+
         String name = uc_name_txt.getText();
         usecase.setName(name);
 
@@ -601,11 +604,14 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
         String uc_post = uc_post_txt.getText();
         String uc_priority = priority_list.getItemAt(priority_list.getSelectedIndex());
         String uc_obj = uc_id_rel.getText();
-        String req_id = req_combo.getSelectedItem().toString();
 
         if (!"".equals(uc_id) && uc_id != null) {
             db_control.getConnectDB();
-            db_control.insertUsecaseProperties(uc_id, req_id, uc_name, uc_goal, uc_pre, uc_post, uc_priority, uc_obj);
+            if (req_combo.getSelectedItem() == null) {
+                db_control.insertUsecaseProperties(uc_id, "", uc_name, uc_goal, uc_pre, uc_post, uc_priority, uc_obj);
+            } else {
+                db_control.insertUsecaseProperties(uc_id, req_combo.getSelectedItem().toString(), uc_name, uc_goal, uc_pre, uc_post, uc_priority, uc_obj);
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Input usecase id");
         }
@@ -726,6 +732,7 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
                 req_combo.addItem(req_id);
             }
         } catch (SQLException ex) {
+        } catch (Exception ex) {
         }
     }
 
@@ -740,6 +747,7 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
                 req_detail_txt.setText("Detail : " + detail);
             }
         } catch (SQLException ex) {
+        } catch (Exception ex) {
         }
     }
 }

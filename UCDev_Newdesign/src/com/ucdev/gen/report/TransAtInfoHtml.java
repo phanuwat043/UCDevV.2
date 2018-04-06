@@ -20,8 +20,8 @@ import org.xml.sax.SAXException;
  */
 public class TransAtInfoHtml {
 
-    public void GenHTML() throws SAXException, IOException, ParserConfigurationException {
-        String pathXML = "C:\\UCDev\\";
+    public void GenHTML(File file) throws SAXException, IOException, ParserConfigurationException {
+        String pathXML = file.getPath() + "\\";
         File fXmlFile = new File(pathXML + "actor.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -120,14 +120,14 @@ public class TransAtInfoHtml {
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-        String pathHTML = "C:\\UCDev\\Report\\";
+        String pathHTML = file.getPath() + "\\Documents\\";
         File f = new File(pathHTML + "ActorInfo.html");
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             if (f.canWrite()) {
                 //JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
-                System.out.println("success!!!");
+                //System.out.println("success!!!");
             }
             bw.write(html);
             bw.close();

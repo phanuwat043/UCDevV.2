@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,10 +24,7 @@ import java.util.Map;
  */
 public class RequirementTraceability {
 
-    /**
-     * @param args the command line arguments
-     */
-    public void RequirementTraceability() {
+    public void RequirementTraceability(File file) {
         try {
             RequirementTraceability req = new RequirementTraceability();
 
@@ -38,7 +36,7 @@ public class RequirementTraceability {
             Map noCol = new HashMap(); //map ตำแหน่งโดยcolumnของแต่ละแถว
 
             Map map1 = new HashMap(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้ ซึ่งในนี้เป็นแบบmultivalues
-            String pathXML = "C:\\UCDev\\";
+            String pathXML = file.getPath() + "\\";
             File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -65,7 +63,7 @@ public class RequirementTraceability {
 
                     System.out.println(firstNum + " : " + lastNum);
                     req.createHTML(row);
-                    trace.createRelationToHTML(temp, row, firstNum, lastNum);
+                    trace.createRelationToHTML(temp, row, firstNum, lastNum, file);
 
                     for (int ucList = 0; ucList < eElement.getElementsByTagName("uc").getLength(); ucList++) {
                         relColumn.add(eElement.getElementsByTagName("uc").item(ucList).getTextContent());//add to arraylist
@@ -190,13 +188,13 @@ public class RequirementTraceability {
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
-            String pathHTML = "C:\\UCDev\\Report\\";
+            String pathHTML = file.getPath() + "\\Documents\\";
             File f = new File(pathHTML + "traceabilitymatrix.html");
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(f));
                 if (f.canWrite()) {
-
+                    JOptionPane.showMessageDialog(null, "Generate requirement success!");
                 }
                 bw.write(html);
                 bw.close();
@@ -213,7 +211,7 @@ public class RequirementTraceability {
         BufferedWriter bw = new BufferedWriter(new FileWriter(htmlFile));
         String html = "<html><title>Traceability Matrix Requirement</title></html>";
         if (htmlFile.canWrite()) {
-            System.out.println("created html !!!");
+            //System.out.println("created html !!!");
         }
         bw.write(html);
         bw.close();

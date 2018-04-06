@@ -67,7 +67,10 @@ public class MainForm extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         jPanel1.add(panel);
         setEnableButton(false);
-
+        
+        export_report.setEnabled(false);
+        export_requirement.setEnabled(false);
+        
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -79,6 +82,7 @@ public class MainForm extends javax.swing.JFrame {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
                         ObjButtons, ObjButtons[1]);
                 if (PromptResult == JOptionPane.YES_OPTION) {
+                    new DBControl().deleteDataFromDatabase();
                     System.exit(0);
                 }
             }
@@ -103,6 +107,10 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         save_item = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        export_report = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        export_requirement = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         gen_actor_jmenu = new javax.swing.JMenuItem();
         gen_usecase_jmenu = new javax.swing.JMenuItem();
@@ -227,6 +235,34 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jFile.add(save_item);
+        jFile.add(jSeparator2);
+
+        export_report.setText("Export report");
+        export_report.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                export_reportMouseClicked(evt);
+            }
+        });
+        export_report.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                export_reportActionPerformed(evt);
+            }
+        });
+        jFile.add(export_report);
+        jFile.add(jSeparator3);
+
+        export_requirement.setText("Export requirement");
+        export_requirement.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                export_requirementMouseClicked(evt);
+            }
+        });
+        export_requirement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                export_requirementActionPerformed(evt);
+            }
+        });
+        jFile.add(export_requirement);
 
         jMenuBar1.add(jFile);
 
@@ -350,6 +386,9 @@ public class MainForm extends javax.swing.JFrame {
         new DBControl().queryUsecaseProperties();
         new DBControl().queryRelation();
         new DBControl().queryRequirement();
+        
+        export_report.setEnabled(true);
+        export_requirement.setEnabled(true);
     }//GEN-LAST:event_save_itemActionPerformed
 
     private void gen_pdf_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_pdf_jmenuActionPerformed
@@ -378,13 +417,28 @@ public class MainForm extends javax.swing.JFrame {
         openDatadictionary();
     }//GEN-LAST:event_data_dict_itemActionPerformed
 
-    /*public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainForm().setVisible(true);
-            }
-        });
-    }*/
+    private void export_reportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_export_reportMouseClicked
+
+    }//GEN-LAST:event_export_reportMouseClicked
+
+    private void export_requirementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_export_requirementMouseClicked
+
+    }//GEN-LAST:event_export_requirementMouseClicked
+
+    private void export_reportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_reportActionPerformed
+        genActorToHTML();
+        genUsecaseToHTML();
+    }//GEN-LAST:event_export_reportActionPerformed
+
+    private void export_requirementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_requirementActionPerformed
+        try {
+            traceabilityMetrixToHTML();
+            requirementCategoryToHTML();
+        } catch (ParserConfigurationException ex) {
+        } catch (SAXException ex) {
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_export_requirementActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem TraceMatrix_jMenu;
@@ -392,6 +446,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton associationBtn;
     private javax.swing.JMenuItem data_dict_item;
     private javax.swing.JMenuItem diagram_capture_jmenu;
+    private javax.swing.JMenuItem export_report;
+    private javax.swing.JMenuItem export_requirement;
     private javax.swing.JButton extendBtn;
     private javax.swing.JMenuItem gen_actor_jmenu;
     private javax.swing.JMenuItem gen_pdf_jmenu;
@@ -406,6 +462,8 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem save_item;
     private javax.swing.JButton systemBtn;
@@ -424,7 +482,7 @@ public class MainForm extends javax.swing.JFrame {
                 panel.getSplitPane("untitle", draw_panel);
                 setEnableButton(true);
             } else {
-                JOptionPane.showMessageDialog(null, "Please input your file name");
+                JOptionPane.showMessageDialog(null, "Please input your project name");
             }
         }
     }
@@ -507,7 +565,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void genActorToHTML() {
         try {
-            new TransAtInfoHtml().GenHTML();
+            new TransAtInfoHtml().GenHTML(FileController.getInstance().readFolder());
         } catch (SAXException ex) {
         } catch (IOException ex) {
         } catch (ParserConfigurationException ex) {
@@ -516,7 +574,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void genUsecaseToHTML() {
         try {
-            new TransUcInfoHtml().GenHTML();
+            new TransUcInfoHtml().GenHTML(FileController.getInstance().readFolder());
         } catch (ParserConfigurationException ex) {
         } catch (SAXException ex) {
         } catch (IOException ex) {
@@ -538,10 +596,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void traceabilityMetrixToHTML() {
-        new RequirementTraceability().RequirementTraceability();
+        new RequirementTraceability().RequirementTraceability(FileController.getInstance().readFolder());
     }
 
     private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
-        new RequirementCategory().createRequirementCategory();
+        new RequirementCategory().createRequirementCategory(FileController.getInstance().readFolder());
     }
 }

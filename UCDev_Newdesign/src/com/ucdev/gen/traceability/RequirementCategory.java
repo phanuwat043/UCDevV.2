@@ -20,9 +20,9 @@ import org.xml.sax.SAXException;
  */
 public class RequirementCategory {
 
-    public void createRequirementCategory() throws ParserConfigurationException, SAXException, IOException {
+    public void createRequirementCategory(File file) throws ParserConfigurationException, SAXException, IOException {
 
-        String pathXML = "C:\\UCDev\\";
+        String pathXML = file.getPath()+"\\";
         File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -96,7 +96,7 @@ public class RequirementCategory {
                 + "<table border='1' align='center'>"
                 + resultTable
                 + "</table></body></html>";
-        String pathHTML = "C:\\UCDev\\Report\\";
+        String pathHTML = file.getPath()+"\\Documents\\";
         File f = new File(pathHTML + "requirementcategories.html");
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
