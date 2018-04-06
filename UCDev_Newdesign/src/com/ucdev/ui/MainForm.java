@@ -67,10 +67,10 @@ public class MainForm extends javax.swing.JFrame {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         jPanel1.add(panel);
         setEnableButton(false);
-        
+
         export_report.setEnabled(false);
         export_requirement.setEnabled(false);
-        
+
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -386,7 +386,7 @@ public class MainForm extends javax.swing.JFrame {
         new DBControl().queryUsecaseProperties();
         new DBControl().queryRelation();
         new DBControl().queryRequirement();
-        
+
         export_report.setEnabled(true);
         export_requirement.setEnabled(true);
     }//GEN-LAST:event_save_itemActionPerformed
