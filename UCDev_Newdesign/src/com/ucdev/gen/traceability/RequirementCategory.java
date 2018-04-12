@@ -1,5 +1,6 @@
 package com.ucdev.gen.traceability;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,10 +21,10 @@ import org.xml.sax.SAXException;
  */
 public class RequirementCategory {
 
-    public void createRequirementCategory(File file) throws ParserConfigurationException, SAXException, IOException {
-
-        String pathXML = file.getPath()+"\\";
-        File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+    public void createRequirementCategory() throws ParserConfigurationException, SAXException, IOException {
+        FileController path = new FileController();
+        
+        File fXmlFile = new File(path.getPathXML() + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -96,7 +97,7 @@ public class RequirementCategory {
                 + "<table border='1' align='center'>"
                 + resultTable
                 + "</table></body></html>";
-        String pathHTML = file.getPath()+"\\Documents\\";
+        String pathHTML = path.getPathHTML();
         File f = new File(pathHTML + "requirementcategories.html");
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));

@@ -18,11 +18,15 @@ import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.requirement.RequirementUI;
 import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
+import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +65,8 @@ public class MainForm extends javax.swing.JFrame {
     private int uc = 0;
 
     private final Map map = new HashMap();
-
+    FileController path = new FileController();
+    
     public MainForm() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -403,9 +408,17 @@ public class MainForm extends javax.swing.JFrame {
         try {
             traceabilityMetrixToHTML();
             requirementCategoryToHTML();
-        } catch (ParserConfigurationException ex) {
-        } catch (SAXException ex) {
+            //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\traceabilitymatrix.html";
+            String url = path.getPathHTML()+"\\traceabilitymatrix.html";
+           File htmlFile = new File(url);
+           Desktop.getDesktop().browse(htmlFile.toURI());
+
+        
         } catch (IOException ex) {
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
@@ -470,7 +483,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton usecaseBtn;
     // End of variables declaration//GEN-END:variables
 
-    private void createPanel() {
+    private void createPanel() { //xml tree tabpane
         if (FileController.getInstance().getFILE_NAME() == null) {
             String file = JOptionPane.showInputDialog("Please input your project name : ");
             FileController.getInstance().setFILE_NAME(file);
@@ -596,10 +609,10 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void traceabilityMetrixToHTML() {
-        new RequirementTraceability().RequirementTraceability(FileController.getInstance().readFolder());
+        new RequirementTraceability().createRequirementTraceability();
     }
 
     private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
-        new RequirementCategory().createRequirementCategory(FileController.getInstance().readFolder());
+        new RequirementCategory().createRequirementCategory();
     }
 }

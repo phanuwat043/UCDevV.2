@@ -152,7 +152,7 @@ public final class MainPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane xml_view_tabpane;
     // End of variables declaration//GEN-END:variables
 
-    public void getSplitPane(String name, DrawPanel p) {
+    public void getSplitPane(String name, DrawPanel p) { //dataTabpane is part for add tab details of usecase and actor 
         drawTabpane.addTab(name, p);
     }
 

@@ -18,9 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import opennlp.tools.cmdline.postag.POSModelLoader;
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
+//import opennlp.tools.cmdline.postag.POSModelLoader;
+//import opennlp.tools.postag.POSModel;
+//import opennlp.tools.postag.POSTaggerME;
 
 /**
  *
@@ -679,8 +679,8 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
 
     private void setToolTipNLP(MouseEvent evt) {
 
-        POSModel model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
-        POSTaggerME tagger = new POSTaggerME(model);
+        //POSModel model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
+        //POSTaggerME tagger = new POSTaggerME(model);
 
         String tip = null;
         String sent[] = null;
@@ -700,7 +700,7 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
                 String[] word = new String[]{split[i]};
                 for (int j = 0; j < word.length; j++) {
                     sent = new String[]{word[j]};
-                    tags = tagger.tag(sent);
+                    //tags = tagger.tag(sent);
 
                     for (String tag : tags) {
                         if ("NN".equals(tag) || "NNS".equals(tag) || "NNP".equals(tag) || "NNPS".equals(tag)

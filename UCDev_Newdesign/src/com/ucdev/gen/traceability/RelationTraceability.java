@@ -1,5 +1,6 @@
 package com.ucdev.gen.traceability;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 public class RelationTraceability {
 
-    public void createRelationToHTML(int numOfReq, String nameHTMLofReq, int firstOfRel, int lastOfRel, File file) {
+    public void createRelationToHTML(int numOfReq, String nameHTMLofReq, int firstOfRel, int lastOfRel) {
 
         try {
             List<String> relColumn = new ArrayList(); //เก็บcolumnทั้งหมดแบบไม่คัดตัวซ้ำออก
@@ -35,7 +36,9 @@ public class RelationTraceability {
             List<String> typeRelation = new ArrayList(); //เก็บชนิดของความสัมพันธ์แล้วแยกเป็นตัวอักษรI E A
 
             Map<String, String> map1 = new HashMap<String, String>(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้
-            String pathXML = file.getPath() + "\\";
+            FileController path = new FileController();
+            
+            String pathXML = path.getPathXML();
             File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -161,7 +164,7 @@ public class RelationTraceability {
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
-            String pathHTML = file.getPath() + "\\Documents\\";
+            String pathHTML = path.getPathHTML();
             File f = new File(pathHTML + nameHTMLofReq + ".html");
 
             try {
