@@ -68,7 +68,7 @@ public class RequirementCategory {
         }
 
         //ใช้ในการสร้างฟอร์มhtml
-        String html = "<html><title>Requirement Categories</title>"
+        String html = "<html><title>Specification Document</title>"
                 + "<head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=UTF-8\"><style>\n"
                 + "table {\n"
                 + "    border-collapse: collapse;\n"
