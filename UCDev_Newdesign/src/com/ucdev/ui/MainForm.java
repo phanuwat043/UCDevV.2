@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -464,7 +465,11 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_export_requirementActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       requirementManagement(); 
+        try { 
+            requirementManagement();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -631,7 +636,7 @@ public class MainForm extends javax.swing.JFrame {
         new RequirementCategory().createRequirementCategory();
     }
     
-    private void requirementManagement() {
+    private void requirementManagement() throws SQLException {
         requirementManage reqMan = new requirementManage();
         reqMan.show();
     }

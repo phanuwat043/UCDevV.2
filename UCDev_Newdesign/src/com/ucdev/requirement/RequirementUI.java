@@ -42,7 +42,7 @@ public class RequirementUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Req ID", "Req detail"
+                "Req ID", "Req description"
             }
         ) {
             Class[] types = new Class [] {

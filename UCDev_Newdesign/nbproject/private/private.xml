@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/ui/MainForm.java</file>
             <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/ui/prop/requirementManage.java</file>
-            <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/draw/control/DrawPanel.java</file>
             <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/gen/traceability/RequirementCategory.java</file>
             <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/requirement/RequirementUI.java</file>
+            <file>file:/C:/Users/5730213057/Documents/GitHub/UCDev_2/UCDevV.2_integrated/UCDev_Newdesign/src/com/ucdev/db/control/DBControl.java</file>
         </group>
     </open-files>
 </project-private>
