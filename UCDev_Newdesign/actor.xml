@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actor>
+<actors>
   <actor actor_id="001">
     <actor_name>Actor 1</actor_name>
     <actor_description>jjjjjj</actor_description>
     <actor_type>Person</actor_type>
   </actor>
-</actor>
+</actors>

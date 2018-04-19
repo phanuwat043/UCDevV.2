@@ -5,17 +5,44 @@
  */
 package com.ucdev.ui.prop;
 
+import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 import com.ucdev.db.control.DBControl;
+import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.accessibility.Accessible;
+import javax.swing.AbstractAction;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.plaf.basic.ComboPopup;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -31,6 +58,22 @@ public class requirementManage extends javax.swing.JFrame {
     public requirementManage() throws SQLException {
         initComponents();
         listRequirement();
+        String[] dataItem = getAllReqID();
+        //{"req-1", "req-2", "req-3", "req-4"}
+	JComboBox countryCombo = new JComboBox(dataItem);
+        /*
+         CheckableItem[] m = {
+            new CheckableItem("aaa",     false),
+            new CheckableItem("bbbbb",   false),
+            new CheckableItem("111",     false),
+            new CheckableItem("33333",   false),
+            new CheckableItem("2222",    false),
+            new CheckableItem("ccccccc", false)
+        };*/
+
+        
+	TableColumn countryColumn = reqManageTable.getColumnModel().getColumn(2);
+	countryColumn.setCellEditor(new DefaultCellEditor(countryCombo));//new CheckedComboBox<>(new DefaultComboBoxModel<>(m))
     }
 
     /**
@@ -42,11 +85,17 @@ public class requirementManage extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         reqManageTable = new javax.swing.JTable();
         updateButton = new javax.swing.JButton();
         reportButton = new javax.swing.JButton();
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -58,10 +107,11 @@ public class requirementManage extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Description"
+                "ID", "Description", "Link"
             }
         ));
         jScrollPane1.setViewportView(reqManageTable);
+        /*** ComboBox ***/
 
         updateButton.setText("update");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -128,11 +178,14 @@ public class requirementManage extends javax.swing.JFrame {
        updateRequirement();
     }//GEN-LAST:event_updateButtonActionPerformed
 
+     
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton reportButton;
@@ -174,4 +227,128 @@ public class requirementManage extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
+    
+    private String[] getAllReqID() throws SQLException{
+     String[] req = {};
+        db_control.getConnectDB();
+        String s = "SELECT * FROM requirement";
+        ResultSet rs = stmt.executeQuery(s);
+        while (rs.next()) {
+            req = append(req, rs.getString("REQ_ID"));
+        }    
+      return req;
+    }
+    
+    private static <T> T[] append(T[] arr, T element) {
+        final int N = arr.length;
+        arr = Arrays.copyOf(arr, N + 1);
+        arr[N] = element;
+        return arr;
+    }
+    /*class CheckableItem {
+    public final String text;
+    public boolean selected;
+    protected CheckableItem(String text, boolean selected) {
+        this.text = text;
+        this.selected = selected;
+    }
+    @Override public String toString() {
+        return text;
+    }
+}
+
+class CheckBoxCellRenderer<E extends CheckableItem> implements ListCellRenderer<E> {
+    private final JLabel label = new JLabel(" ");
+    private final JCheckBox check = new JCheckBox(" ");
+    @Override public Component getListCellRendererComponent(JList list, CheckableItem value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (index < 0) {
+            label.setText(getCheckedItemString(list.getModel()));
+            return label;
+        } else {
+            check.setText(Objects.toString(value, ""));
+            check.setSelected(value.selected);
+            if (isSelected) {
+                check.setBackground(list.getSelectionBackground());
+                check.setForeground(list.getSelectionForeground());
+            } else {
+                check.setBackground(list.getBackground());
+                check.setForeground(list.getForeground());
+            }
+            return check;
+        }
+    }
+    private String getCheckedItemString(ListModel model) {
+        List<String> sl = new ArrayList<>();
+        for (int i = 0; i < model.getSize(); i++) {
+            Object o = model.getElementAt(i);
+            if (o instanceof CheckableItem && ((CheckableItem) o).selected) {
+                sl.add(o.toString());
+            }
+        }
+        return sl.stream().sorted().collect(Collectors.joining(", "));
+    }
+}
+
+class CheckedComboBox<E extends CheckableItem> extends JComboBox<E> {
+    private boolean keepOpen;
+    private transient ActionListener listener;
+
+    protected CheckedComboBox() {
+        super();
+    }
+    protected CheckedComboBox(ComboBoxModel<E> aModel) {
+        super(aModel);
+    }
+//     protected CheckedComboBox(E[] m) {
+//         super(m);
+//     }
+    @Override public Dimension getPreferredSize() {
+        return new Dimension(200, 20);
+    }
+    @Override public void updateUI() {
+        setRenderer(null);
+        removeActionListener(listener);
+        super.updateUI();
+        listener = e -> {
+            if (e.getModifiers() == InputEvent.BUTTON1_MASK) {
+                updateItem(getSelectedIndex());
+                keepOpen = true;
+            }
+        };
+        setRenderer(new CheckBoxCellRenderer<>());
+        addActionListener(listener);
+        getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "checkbox-select");
+        getActionMap().put("checkbox-select", new AbstractAction() {
+            @Override public void actionPerformed(ActionEvent e) {
+                Accessible a = getAccessibleContext().getAccessibleChild(0);
+                if (a instanceof ComboPopup) {
+                    ComboPopup pop = (ComboPopup) a;
+                    updateItem(pop.getList().getSelectedIndex());
+                }
+            }
+        });
+    }
+    protected void updateItem(int index) {
+        if (isPopupVisible()) {
+            E item = getItemAt(index);
+            item.selected ^= true;
+//             ComboBoxModel m = getModel();
+//             if (m instanceof CheckableComboBoxModel) {
+//                 ((CheckableComboBoxModel) m).fireContentsChanged(index);
+//             }
+            // removeItemAt(index);
+            // insertItemAt(item, index);
+            setSelectedIndex(-1);
+            setSelectedItem(item);
+        }
+    }
+    @Override public void setPopupVisible(boolean v) {
+        if (keepOpen) {
+            keepOpen = false;
+        } else {
+            super.setPopupVisible(v);
+        }
+    }
+}*/
+    
 }

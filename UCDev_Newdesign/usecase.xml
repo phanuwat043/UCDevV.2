@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<usecase>
+<usecases>
   <usecase usecase_id="001">
     <usecase_name>Usecase 1</usecase_name>
     <usecase_goal>lklk</usecase_goal>
@@ -22,4 +22,4 @@
     <alternative_flow/>
     <exception_flow/>
   </usecase>
-</usecase>
+</usecases>

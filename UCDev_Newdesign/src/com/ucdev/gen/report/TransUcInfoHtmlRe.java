@@ -1,14 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.ucdev.gen.report;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -19,16 +34,17 @@ import org.xml.sax.SAXException;
  *
  * @author FilmKhonDee
  */
-public class TransUcInfoHtml {
-
-    public void GenHTML(File file) throws ParserConfigurationException, SAXException, IOException {
-        String pathXML = file.getPath() + "\\";
+public class TransUcInfoHtmlRe{
+    
+ 
+    public void GenHTML(String linkpath,String imgpath,String filename) throws ParserConfigurationException, SAXException, IOException {
+         String pathXML = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2_integrated\\UCDev_Newdesign\\";
         File fXmlFile = new File(pathXML + "usecase.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
-        NodeList nList = doc.getElementsByTagName("usecase");
+        NodeList nList = doc.getElementsByTagName("usecases");
         ArrayList usecaseName = new ArrayList();
         ArrayList usecaseGoal = new ArrayList();
         ArrayList usecasePre = new ArrayList();
@@ -38,9 +54,17 @@ public class TransUcInfoHtml {
         ArrayList usecaseFlow = new ArrayList();
         ArrayList usecaseAlt = new ArrayList();
         ArrayList usecaseExc = new ArrayList();
-
+        
+        //link "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\AddItemUseCase.html\"
+        //img "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\image\\requirement.jpg\"
+        
+        System.out.println(linkpath);
+        System.out.println(imgpath);
+        
         String createBodyHTML = "";
-
+        String link = "<a href=\""+linkpath+"\">UseCaseinfo</a>";
+        String img = "<img src=\""+imgpath+"\" alt=\"Mountain\"></img>";
+        //System.out.println(img);
         for (int temp = 0; temp < nList.getLength(); temp++) {//for add to arraylist
             Node nNode = nList.item(temp);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -52,7 +76,7 @@ public class TransUcInfoHtml {
                 usecasePri.add(eElement.getElementsByTagName("usecase_pri").item(0).getTextContent());//add to arraylist
             }
         }
-
+ 
         for (int temp = 0; temp < nList.getLength(); temp++) {//for list from arraylist
             String bodyForm = "<article>\n"
                     + "    <p> <strong> Use Case Name  </strong> : <i>" + usecaseName.get(temp) + "</i> </p>\n"
@@ -60,10 +84,13 @@ public class TransUcInfoHtml {
                     + "    <p> <strong> Pre-Condition  </strong> : <i>" + usecasePre.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Post-Condition  </strong> : <i>" + usecasePost.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Priority  </strong> : <i>" + usecasePri.get(temp) + "</i> </p>\n"
-                    + "</article><hr size=1 color=grey width=87% align=right>";
-            createBodyHTML = createBodyHTML + bodyForm;
+                    + "<p>" + img + "</p>\n"
+                    + link
+                    + "\n"
+                    + "</article>";
+            createBodyHTML = createBodyHTML+bodyForm;
         }
-
+        
         String html = "<html xsl:version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n"
                 + "<body style=\"background-color:#EEEEEE\">\n"
                 + "<style>\n"
@@ -118,11 +145,11 @@ public class TransUcInfoHtml {
                 + "  \n"
                 + "<nav>\n"
                 + "  <ul>\n"
-                + "    <li><p>ACTOR</p></li>\n"
+                + "    <li><p>Use Case</p></li>\n"
                 + "  </ul>\n"
                 + "</nav>\n"
                 + "\n"
-                + createBodyHTML
+                +createBodyHTML
                 + "\n"
                 + "<footer>Copyright UCDEV</footer>\n"
                 + "\n"
@@ -131,15 +158,16 @@ public class TransUcInfoHtml {
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-
-        String pathHTML = file.getPath() + "\\Documents\\";
-        File f = new File(pathHTML + "UsecaseInfo.html");
+        
+        String pathHTML = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2_integrated\\UCDev_Newdesign\\";
+        String fullfilename = filename+".html";
+        File f = new File(pathHTML + fullfilename);
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             if (f.canWrite()) {
-                JOptionPane.showMessageDialog(null, "Generate report success!");
-                //System.out.println("success!!!");
+                //JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
+                System.out.println("success!!!");
             }
             bw.write(html);
             bw.close();

@@ -11,8 +11,9 @@ import com.ucdev.draw.control.Inherit;
 import com.ucdev.ui.prop.ActorPropPanelForm;
 import com.ucdev.ui.prop.UsecasePropPanelForm;
 import com.ucdev.gen.report.GenPDF;
-import com.ucdev.gen.report.TransAtInfoHtml;
-import com.ucdev.gen.report.TransUcInfoHtml;
+import com.ucdev.gen.report.NewJFrame;
+import com.ucdev.gen.report.TransAtInfoHtmlRe;
+import com.ucdev.gen.report.TransUcInfoHtmlRe;
 import com.ucdev.gen.traceability.RequirementCategory;
 import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.requirement.RequirementUI;
@@ -597,21 +598,11 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void genActorToHTML() {
-        try {
-            new TransAtInfoHtml().GenHTML(FileController.getInstance().readFolder());
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        } catch (ParserConfigurationException ex) {
-        }
+        //new TransAtInfoHtmlRe().GenHTML(FileController.getInstance().readFolder());
     }
 
     private void genUsecaseToHTML() {
-        try {
-            new TransUcInfoHtml().GenHTML(FileController.getInstance().readFolder());
-        } catch (ParserConfigurationException ex) {
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        }
+        //new TransUcInfoHtmlRe().GenHTML(FileController.getInstance().readFolder());
     }
 
     private void genPDF() {
@@ -620,6 +611,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void captureDiagram() {
         try {
+            new NewJFrame().show();
             BufferedImage image = new BufferedImage(draw_panel.getWidth(), draw_panel.getHeight(), BufferedImage.TYPE_INT_RGB);
             draw_panel.paint(image.getGraphics());
             ImageIO.write(image, "png", new File("diagram.png"));
