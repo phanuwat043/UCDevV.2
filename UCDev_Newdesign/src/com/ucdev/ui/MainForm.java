@@ -19,6 +19,7 @@ import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.requirement.RequirementUI;
 import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
+import com.ucdev.ui.prop.reqManagement;
 import com.ucdev.ui.prop.requirementManage;
 import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
@@ -629,7 +630,7 @@ public class MainForm extends javax.swing.JFrame {
     }
     
     private void requirementManagement() throws SQLException {
-        requirementManage reqMan = new requirementManage();
+        reqManagement reqMan = new reqManagement();
         reqMan.show();
     }
 }
