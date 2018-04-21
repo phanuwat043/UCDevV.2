@@ -1,7 +1,6 @@
 package com.ucdev.ui.prop;
 
-import com.ucdev.table.datadict.TableOrdinal;
-import com.ucdev.table.datadict.TableRange;
+import com.ucdev.table.datadict.TableOrdinalOutput;
 
 /**
  *
@@ -9,8 +8,14 @@ import com.ucdev.table.datadict.TableRange;
  */
 public class DatadictProperty_Output extends javax.swing.JPanel {
 
-    public DatadictProperty_Output() {
+    private final String uc_id;
+    private final String uc_name;
+
+    public DatadictProperty_Output(String id, String name) {
         initComponents();
+
+        this.uc_id = id;
+        this.uc_name = name;
     }
 
     @SuppressWarnings("unchecked")
@@ -29,7 +34,7 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
 
         jLabel1.setText("Varname");
 
-        type_panel.setLayout(new java.awt.GridLayout(1, 0));
+        type_panel.setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setViewportView(word_recom_list);
 
@@ -72,6 +77,9 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(type_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(22, 22, 22))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(varname_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -83,15 +91,14 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(type_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 30, Short.MAX_VALUE))
-                    .addComponent(type_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(22, 22, 22))
+                        .addGap(0, 52, Short.MAX_VALUE))))
             .addComponent(jSeparator1)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void type_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_type_comboActionPerformed
         getTableType();
+        type_panel.updateUI();
     }//GEN-LAST:event_type_comboActionPerformed
 
 
@@ -110,7 +117,7 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
     public void getTableType() {
         switch (type_combo.getSelectedIndex()) {
             case 1:
-                type_panel.add(new TableOrdinal());
+                type_panel.add(new TableOrdinalOutput(uc_id, uc_name, varname_txt.getText(), type_combo.getSelectedItem().toString()));
                 break;
         }
     }

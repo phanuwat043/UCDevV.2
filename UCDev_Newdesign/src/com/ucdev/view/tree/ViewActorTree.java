@@ -1,6 +1,5 @@
 package com.ucdev.view.tree;
 
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

@@ -39,7 +39,7 @@ public class DBControl {
 
     // jdbc Connection
     public static Connection conn = null;
-    private static Statement stmt, stmt_flow, stmt_alt, stmt_ext, stmt_uc = null;
+    private static Statement stmt, stmt_flow, stmt_alt, stmt_ext, stmt_uc, stmt_ac, stmt_rel;
 
     public void getConnectDB() {
         try {
@@ -354,64 +354,221 @@ public class DBControl {
 
             //query from database
             stmt = conn.createStatement();
-            stmt_uc = conn.createStatement();
-            ResultSet results = stmt.executeQuery("select * from actor");
-            ResultSet results_uc = stmt_uc.executeQuery("select * from usecase");
+            ResultSet results = stmt.executeQuery("select * from requirement");
 
             // root element
             Element rootElement = doc.createElement("requirements");
             doc.appendChild(rootElement);
 
-            Element req_element = doc.createElement("requirement");
-            rootElement.appendChild(req_element);
-
-            Attr attr_req = doc.createAttribute("id");
-            attr_req.setValue("req01");
-            req_element.setAttributeNode(attr_req);
-
-            Element ac_element = doc.createElement("actor");
-            req_element.appendChild(ac_element);
             while (results.next()) {
-                //id
-                String id = results.getString(1);
-                //name
-                String name = results.getString(2);
 
-                // actor name element
-                Element id_element = doc.createElement("at");
-                id_element.appendChild(doc.createTextNode(name));
-                ac_element.appendChild(id_element);
+                String req_id = results.getString(1);
+                String req_desc = results.getString(2);
 
-                // setting attribute to element
-                Attr attr = doc.createAttribute("actor_id");
-                attr.setValue(id);
-                id_element.setAttributeNode(attr);
+                Element req_element = doc.createElement("requirement");
+                rootElement.appendChild(req_element);
 
+                Attr attr_id = doc.createAttribute("id");
+                attr_id.setValue(req_id);
+                req_element.setAttributeNode(attr_id);
+
+                Attr attr_desc = doc.createAttribute("description");
+                attr_desc.setValue(req_desc);
+                req_element.setAttributeNode(attr_desc);
+
+                //query from database
+                stmt_uc = conn.createStatement();
+                stmt_ac = conn.createStatement();
+                stmt_rel = conn.createStatement();
+
+                ResultSet results_uc = stmt_uc.executeQuery("SELECT usecase.UC_ID, usecase.UC_NAME\n"
+                        + "FROM (requirement INNER JOIN usecase ON requirement.REQ_ID = usecase.REQ_ID)\n"
+                        + "WHERE usecase.REQ_ID='" + req_id + "'");
+
+                ResultSet results_ac = stmt_ac.executeQuery("SELECT actor.AC_ID, actor.AC_NAME\n"
+                        + "FROM (requirement INNER JOIN actor ON requirement.REQ_ID = actor.REQ_ID)\n"
+                        + "WHERE actor.REQ_ID='" + req_id + "'");
+
+                ResultSet results_rel = stmt_rel.executeQuery("SELECT actor.AC_ID, actor.AC_NAME, usecase.UC_ID,usecase.UC_NAME "
+                        + "FROM ((association "
+                        + "INNER JOIN actor ON association.AC_OBJ = actor.AC_OBJ)"
+                        + "INNER JOIN usecase ON association.UC_OBJ = usecase.UC_OBJ)"
+                        + "where actor.REQ_ID='" + req_id + "'");
+
+                stmt_ext = conn.createStatement();
+                ResultSet results_ext = stmt_ext.executeQuery("SELECT usecase.UC_ID,usecase.UC_NAME,extends.UC_TARGET "
+                        + "FROM (extends "
+                        + "INNER JOIN usecase ON extends.UC_OBJ = usecase.UC_OBJ)"
+                        + "where usecase.REQ_ID='" + req_id + "'");
+
+                Statement stmt_inc = conn.createStatement();
+                ResultSet results_inc = stmt_inc.executeQuery("SELECT usecase.UC_ID,usecase.UC_NAME,include.UC_TARGET "
+                        + "FROM (include "
+                        + "INNER JOIN usecase ON include.UC_OBJ = usecase.UC_OBJ)"
+                        + "where usecase.REQ_ID='" + req_id + "'");
+
+                Statement stmt_inh = conn.createStatement();
+                ResultSet results_inh = stmt_inh.executeQuery("SELECT usecase.UC_ID,usecase.UC_NAME,inherit.UC_TARGET "
+                        + "FROM (inherit "
+                        + "INNER JOIN usecase ON inherit.UC_OBJ = usecase.UC_OBJ)"
+                        + "where usecase.REQ_ID='" + req_id + "'");
+
+                Element actor = doc.createElement("actor");
+                req_element.appendChild(actor);
+
+                while (results_ac.next()) {
+                    String acid = results_ac.getString(1);
+                    String acname = results_ac.getString(2);
+
+                    Element ac = doc.createElement("at");
+                    ac.appendChild(doc.createTextNode(acname));
+                    actor.appendChild(ac);
+
+                    Attr attr_acid = doc.createAttribute("actor_id");
+                    attr_acid.setValue(acid);
+                    ac.setAttributeNode(attr_acid);
+                }
+                results_ac.close();
+                stmt_ac.close();
+
+                Element usecase = doc.createElement("usecase");
+                req_element.appendChild(usecase);
+
+                while (results_uc.next()) {
+
+                    String ucid = results_uc.getString(1);
+                    String ucname = results_uc.getString(2);
+
+                    Element uc = doc.createElement("uc");
+                    uc.appendChild(doc.createTextNode(ucname));
+                    usecase.appendChild(uc);
+
+                    Attr attr_ucid = doc.createAttribute("usecase_id");
+                    attr_ucid.setValue(ucid);
+                    uc.setAttributeNode(attr_ucid);
+                }
+                results_uc.close();
+                stmt_uc.close();
+
+                Element relations = doc.createElement("relations");
+                req_element.appendChild(relations);
+
+                while (results_rel.next()) {
+                    String acname = results_rel.getString(2);
+                    String ucname = results_rel.getString(4);
+
+                    Element relation = doc.createElement("relation");
+                    relations.appendChild(relation);
+
+                    Element rel_type = doc.createElement("rel-type");
+                    rel_type.appendChild(doc.createTextNode("association"));
+                    relation.appendChild(rel_type);
+
+                    Element rel1_id = doc.createElement("rel1-id");
+                    rel1_id.appendChild(doc.createTextNode(acname));
+                    relation.appendChild(rel1_id);
+
+                    Element rel2_id = doc.createElement("rel2-id");
+                    rel2_id.appendChild(doc.createTextNode(ucname));
+                    relation.appendChild(rel2_id);
+                }
+                results_rel.close();
+                stmt_rel.close();
+
+                while (results_ext.next()) {
+                    String ucname = results_ext.getString(2);
+                    String ext_target = results_ext.getString(3);
+
+                    Element relation = doc.createElement("relation");
+                    relations.appendChild(relation);
+
+                    Element rel_type = doc.createElement("rel-type");
+                    rel_type.appendChild(doc.createTextNode("extends"));
+                    relation.appendChild(rel_type);
+
+                    Element rel1_id = doc.createElement("rel1-id");
+                    rel1_id.appendChild(doc.createTextNode(ucname));
+                    relation.appendChild(rel1_id);
+
+                    Statement stmt_ext_uc = conn.createStatement();
+                    ResultSet results_ext_uc = stmt_ext_uc.executeQuery("select uc_name from usecase where uc_obj='" + ext_target + "'");
+
+                    while (results_ext_uc.next()) {
+
+                        String target = results_ext_uc.getString(1);
+
+                        Element rel2_id = doc.createElement("rel2-id");
+                        rel2_id.appendChild(doc.createTextNode(target));
+                        relation.appendChild(rel2_id);
+                    }
+
+                }
+                results_ext.close();
+                stmt_ext.close();
+
+                while (results_inc.next()) {
+                    String ucname = results_inc.getString(2);
+                    String inc_target = results_inc.getString(3);
+                    
+                    Element relation = doc.createElement("relation");
+                    relations.appendChild(relation);
+
+                    Element rel_type = doc.createElement("rel-type");
+                    rel_type.appendChild(doc.createTextNode("include"));
+                    relation.appendChild(rel_type);
+
+                    Element rel1_id = doc.createElement("rel1-id");
+                    rel1_id.appendChild(doc.createTextNode(ucname));
+                    relation.appendChild(rel1_id);
+
+                    Statement stmt_inc_uc = conn.createStatement();
+                    ResultSet results_inc_uc = stmt_inc_uc.executeQuery("select uc_name from usecase where uc_obj='" + inc_target + "'");
+
+                    while (results_inc_uc.next()) {
+
+                        String target = results_inc_uc.getString(1);
+
+                        Element rel2_id = doc.createElement("rel2-id");
+                        rel2_id.appendChild(doc.createTextNode(target));
+                        relation.appendChild(rel2_id);
+                    }
+                }
+                results_inc.close();
+                stmt_inc.close();
+
+                while (results_inh.next()) {
+                    String ucname = results_inh.getString(2);
+                    String inh_target = results_inh.getString(3);
+                    
+                    Element relation = doc.createElement("relation");
+                    relations.appendChild(relation);
+
+                    Element rel_type = doc.createElement("rel-type");
+                    rel_type.appendChild(doc.createTextNode("inherit"));
+                    relation.appendChild(rel_type);
+
+                    Element rel1_id = doc.createElement("rel1-id");
+                    rel1_id.appendChild(doc.createTextNode(ucname));
+                    relation.appendChild(rel1_id);
+
+                    Statement stmt_inh_uc = conn.createStatement();
+                    ResultSet results_inh_uc = stmt_inh_uc.executeQuery("select uc_name from usecase where uc_obj='" + inh_target + "'");
+
+                    while (results_inh_uc.next()) {
+
+                        String target = results_inh_uc.getString(1);
+
+                        Element rel2_id = doc.createElement("rel2-id");
+                        rel2_id.appendChild(doc.createTextNode(target));
+                        relation.appendChild(rel2_id);
+                    }
+                }
+                results_inh.close();
+                stmt_ext.close();
             }
+
             results.close();
             stmt.close();
-
-            Element uc_element = doc.createElement("usecase");
-            req_element.appendChild(uc_element);
-
-            while (results_uc.next()) {
-                //id
-                String id = results_uc.getString(1);
-                //name
-                String name = results_uc.getString(3);
-
-                // usecase id element
-                Element id_element = doc.createElement("uc");
-                id_element.appendChild(doc.createTextNode(name));
-                uc_element.appendChild(id_element);
-
-                // setting attribute to element
-                Attr attr = doc.createAttribute("usecase_id");
-                attr.setValue(id);
-                id_element.setAttributeNode(attr);
-            }
-            stmt_uc.close();
-            results_uc.close();
 
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -420,8 +577,8 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult(instance.readFolder() + "\\requirement.xml");
-            transformer.transform(source, result);
+            //StreamResult result = new StreamResult(instance.readFolder() + "\\requirement.xml");
+            //transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
             transformer.transform(source, consoleResult);
@@ -437,8 +594,7 @@ public class DBControl {
         }
     }
 
-//relation
-    public void queryRelation() {
+    public void queryDatadict() {
         try {
             //save xml file
             DocumentBuilderFactory dbFactory
@@ -447,82 +603,133 @@ public class DBControl {
             Document doc = dBuilder.newDocument();
 
             //query from database
-            Statement stmt_ac_id, stmt_uc_id, stmt_ex, stmt_in, stmt_inher;
-
-            stmt = conn.createStatement();
-            stmt_ac_id = conn.createStatement();
-            stmt_uc_id = conn.createStatement();
-
-            ResultSet result_ac = stmt_ac_id.executeQuery("select ac_id from actor");
-            ResultSet result_uc = stmt_uc_id.executeQuery("select uc_obj from extends");
-            ResultSet results = null;
+            Statement stmt_in = conn.createStatement();
+            ResultSet results = stmt_in.executeQuery("select uc_id , uc_name from inputdata");
 
             // root element
-            Element rootElement = doc.createElement("relations");
+            Element rootElement = doc.createElement("datadictionnary");
             doc.appendChild(rootElement);
 
-            while (result_ac.next()) {
-                String ac_id = result_ac.getString(1);
-                results = stmt.executeQuery("SELECT actor.AC_ID, actor.AC_NAME, usecase.UC_ID,usecase.UC_NAME "
-                        + "FROM ((association "
-                        + "INNER JOIN actor ON association.AC_OBJ = actor.AC_OBJ)"
-                        + "INNER JOIN usecase ON association.UC_OBJ = usecase.UC_OBJ)"
-                        + "where actor.AC_ID='" + ac_id + "'");
+            while (results.next()) {
 
-                while (results.next()) {
-                    String ac_name = results.getString(2);
-                    String uc_name = results.getString(4);
+                String ucid = results.getString(1);
+                String ucname = results.getString(2);
 
-                    Element req_element = doc.createElement("relation");
-                    rootElement.appendChild(req_element);
+                Element usecase = doc.createElement("Usecase");
+                rootElement.appendChild(usecase);
 
-                    Element type_element = doc.createElement("rel-type");
-                    type_element.appendChild(doc.createTextNode("association"));
-                    req_element.appendChild(type_element);
+                Attr attr_ucid = doc.createAttribute("id");
+                attr_ucid.setValue(ucid);
+                usecase.setAttributeNode(attr_ucid);
 
-                    Element ac_element = doc.createElement("rel1-id");
-                    ac_element.appendChild(doc.createTextNode(ac_name));
-                    req_element.appendChild(ac_element);
+                Attr attr_ucname = doc.createAttribute("name");
+                attr_ucname.setValue(ucname);
+                usecase.setAttributeNode(attr_ucname);
 
-                    Element uc_element = doc.createElement("rel2-id");
-                    uc_element.appendChild(doc.createTextNode(uc_name));
-                    req_element.appendChild(uc_element);
+                //query from database
+                Statement stmt_input = conn.createStatement();
+                ResultSet results_input = stmt_input.executeQuery("select * from inputdata where uc_id='" + ucid + "'");
+
+                while (results_input.next()) {
+
+                    String var = results_input.getString(1);
+                    String type = results_input.getString(2);
+                    String dataset = results_input.getString(3);
+                    String id = results_input.getString(4);
+                    String max = results_input.getString(5);
+                    String min = results_input.getString(6);
+                    String value = results_input.getString(7);
+
+                    Element input = doc.createElement("Input");
+                    usecase.appendChild(input);
+
+                    Element varname = doc.createElement("Varname");
+                    varname.appendChild(doc.createTextNode(var));
+                    input.appendChild(varname);
+
+                    Element Type = doc.createElement("Type");
+                    Type.appendChild(doc.createTextNode(type));
+                    input.appendChild(Type);
+
+                    Element Dataset = doc.createElement("Dataset");
+                    Dataset.appendChild(doc.createTextNode(dataset));
+                    input.appendChild(Dataset);
+
+                    if ("Range".equals(type)) {
+                        Element Condition = doc.createElement("Condition");
+                        input.appendChild(Condition);
+
+                        Attr attr_id = doc.createAttribute("id");
+                        attr_id.setValue(id);
+                        Condition.setAttributeNode(attr_id);
+
+                        Attr attr_min = doc.createAttribute("min");
+                        attr_min.setValue(min);
+                        Condition.setAttributeNode(attr_min);
+
+                        Attr attr_max = doc.createAttribute("max");
+                        attr_max.setValue(max);
+                        Condition.setAttributeNode(attr_max);
+                    } else {
+                        Element Condition = doc.createElement("Condition");
+                        input.appendChild(Condition);
+
+                        Attr attr_id = doc.createAttribute("id");
+                        attr_id.setValue(id);
+                        Condition.setAttributeNode(attr_id);
+
+                        Attr attr_value = doc.createAttribute("value");
+                        attr_value.setValue(value);
+                        Condition.setAttributeNode(attr_value);
+                    }
+
                 }
+                results_input.close();
+                stmt_input.close();
+
+                //query from database
+                Statement stmt_output = conn.createStatement();
+                ResultSet results_output = stmt_output.executeQuery("select * from outputdata where uc_id='" + ucid + "'");
+
+                while (results_output.next()) {
+                    String var = results_output.getString(1);
+                    String type = results_output.getString(2);
+                    String dataset = results_output.getString(3);
+                    String value = results_output.getString(4);
+                    String id = results_output.getString(7);
+
+                    Element output = doc.createElement("Output");
+                    usecase.appendChild(output);
+
+                    Element varname = doc.createElement("Varname");
+                    varname.appendChild(doc.createTextNode(var));
+                    output.appendChild(varname);
+
+                    Element Type = doc.createElement("Type");
+                    Type.appendChild(doc.createTextNode(type));
+                    output.appendChild(Type);
+
+                    Element Dataset = doc.createElement("Dataset");
+                    Dataset.appendChild(doc.createTextNode(dataset));
+                    output.appendChild(Dataset);
+
+                    Element Condition = doc.createElement("Action");
+                    output.appendChild(Condition);
+
+                    Attr attr_id = doc.createAttribute("id");
+                    attr_id.setValue(id);
+                    Condition.setAttributeNode(attr_id);
+
+                    Attr attr_value = doc.createAttribute("value");
+                    attr_value.setValue(value);
+                    Condition.setAttributeNode(attr_value);
+                }
+                results_output.close();
+                stmt_output.close();
             }
 
-            /*while (result_uc.next()) {
-                String uc_obj = result_uc.getString(1);
-                System.out.println("Test : "+uc_obj);
-                result_uc = stmt_uc_id.executeQuery("SELECT usecase.UC_ID,usecase.UC_NAME "
-                        + "FROM extends "
-                        + "INNER JOIN usecase ON extends.UC_OBJ = usecase.UC_OBJ "
-                        + "where usecase.UC_OBJ='" + uc_obj + "'");
-                System.out.println(result_uc);
-                for (int i = 0; i < result_uc.getRow(); i++) {
-                    System.out.println(result_uc.getRow());
-                }
-                while (result_uc.next()) {
-                    System.out.println(result_uc.getString(2));
-                    String uc_name = result_uc.getString(2);
-
-                    Element req_element = doc.createElement("relation");
-                    rootElement.appendChild(req_element);
-
-                    Element type_element = doc.createElement("rel-type");
-                    type_element.appendChild(doc.createTextNode("extends"));
-                    req_element.appendChild(type_element);
-
-                    Element uc_element = doc.createElement("rel2-id");
-                    uc_element.appendChild(doc.createTextNode(uc_name));
-                    req_element.appendChild(uc_element);
-                }
-            }
-            result_uc.close();
-            stmt_uc_id.close();*/
             results.close();
-            stmt.close();
-            result_ac.close();
-            stmt_ac_id.close();
+            stmt_in.close();
 
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -531,11 +738,12 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            StreamResult result = new StreamResult("C:\\UCDev\\relation.xml");
-            transformer.transform(source, result);
+            //StreamResult result = new StreamResult(instance.readFolder() + "\\datadict.xml");
+            //transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
             transformer.transform(source, consoleResult);
+
         } catch (SQLException sqlExcept) {
             sqlExcept.printStackTrace();
         } catch (ParserConfigurationException ex) {
@@ -596,10 +804,10 @@ public class DBControl {
         }
     }
 
-    public void insertActorProperties(String ac_id, String ac_name, String ac_desc, String ac_type, String ac_obj) {
+    public void insertActorProperties(String ac_id, String ac_name, String ac_desc, String ac_type, String ac_obj, String req_id) {
         try {
             stmt = conn.createStatement();
-            stmt.execute("insert into actor values('" + ac_id + "','" + ac_name + "','" + ac_desc + "','" + ac_type + "','" + ac_obj + "')");
+            stmt.execute("insert into actor values('" + ac_id + "','" + ac_name + "','" + ac_desc + "','" + ac_type + "','" + ac_obj + "','" + req_id + "')");
             stmt.close();
             if (stmt.isClosed()) {
                 JOptionPane.showMessageDialog(null, "save data success!");
@@ -654,43 +862,33 @@ public class DBControl {
             stmt.execute("insert into association values('" + uc + "','" + ac + "')");
             stmt.close();
         } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
-    public void insertExtendsRel(List list) {
+    public void insertExtendsRel(Object obj_start, Object obj_target) {
         try {
             stmt = conn.createStatement();
-            for (int i = 0; i < list.size(); i++) {
-                stmt.execute("insert into extends values('" + list.get(i) + "')");
-            }
+            stmt.execute("insert into extends values('" + obj_start + "','" + obj_target + "')");
             stmt.close();
         } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
-    public void insertIncludeRel(List list) {
+    public void insertIncludeRel(Object obj_start, Object obj_target) {
         try {
             stmt = conn.createStatement();
-            for (int i = 0; i < list.size(); i++) {
-                stmt.execute("insert into include values('" + list.get(i) + "')");
-            }
+            stmt.execute("insert into include values('" + obj_start + "','" + obj_target + "')");
             stmt.close();
         } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
-    public void insertInheritRel(List list) {
+    public void insertInheritRel(Object obj_start, Object obj_target) {
         try {
             stmt = conn.createStatement();
-            for (int i = 0; i < list.size(); i++) {
-                stmt.execute("insert into inherit values('" + list.get(i) + "')");
-            }
+            stmt.execute("insert into inherit values('" + obj_start + "','" + obj_target + "')");
             stmt.close();
         } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -707,18 +905,20 @@ public class DBControl {
             stmt.execute("DELETE FROM include");
             stmt.execute("DELETE FROM inherit");
             stmt.execute("DELETE FROM requirement");
+            stmt.execute("DELETE FROM inputdata");
+            stmt.execute("DELETE FROM outputdata");
             stmt.close();
         } catch (SQLException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
         }
     }
 
     public static void main(String[] args) {
         new DBControl().getConnectDB();
-        //new DBControl().queryAlternativeByUcID("002");
         //new DBControl().queryUsecaseProperties();
-        new DBControl().deleteDataFromDatabase();
+        //new DBControl().deleteDataFromDatabase();
         //new DBControl().queryRelation();
         //new DBControl().queryRequirement();
+        new DBControl().queryDatadict();
     }
 }

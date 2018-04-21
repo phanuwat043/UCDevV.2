@@ -1,7 +1,7 @@
 package com.ucdev.ui.prop;
 
-import com.ucdev.table.datadict.TableOrdinal;
-import com.ucdev.table.datadict.TableRange;
+import com.ucdev.table.datadict.TableOrdinalInput;
+import com.ucdev.table.datadict.TableRangeInput;
 
 /**
  *
@@ -9,8 +9,14 @@ import com.ucdev.table.datadict.TableRange;
  */
 public class DatadictProperty_Input extends javax.swing.JPanel {
 
-    public DatadictProperty_Input() {
+    private final String uc_id;
+    private final String uc_name;
+
+    public DatadictProperty_Input(String id, String name) {
         initComponents();
+
+        this.uc_id = id;
+        this.uc_name = name;
     }
 
     @SuppressWarnings("unchecked")
@@ -38,7 +44,7 @@ public class DatadictProperty_Input extends javax.swing.JPanel {
             }
         });
 
-        type_panel.setLayout(new java.awt.GridLayout(1, 0));
+        type_panel.setLayout(new java.awt.BorderLayout());
 
         jScrollPane1.setViewportView(word_recom_list);
 
@@ -93,6 +99,7 @@ public class DatadictProperty_Input extends javax.swing.JPanel {
     private void type_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_type_comboActionPerformed
 
         getTableType();
+        type_panel.updateUI();
     }//GEN-LAST:event_type_comboActionPerformed
 
 
@@ -108,13 +115,13 @@ public class DatadictProperty_Input extends javax.swing.JPanel {
     private javax.swing.JList<String> word_recom_list;
     // End of variables declaration//GEN-END:variables
 
-    public void getTableType(){
-        switch(type_combo.getSelectedIndex()){
-            case 1 :
-                type_panel.add(new TableRange());
+    public void getTableType() {
+        switch (type_combo.getSelectedIndex()) {
+            case 1:
+                type_panel.add(new TableRangeInput(uc_id, uc_name, varname_txt.getText(), type_combo.getSelectedItem().toString()));
                 break;
-            case 2 :
-                type_panel.add(new TableOrdinal());
+            case 2:
+                type_panel.add(new TableOrdinalInput(uc_id, uc_name, varname_txt.getText(), type_combo.getSelectedItem().toString()));
                 break;
         }
     }

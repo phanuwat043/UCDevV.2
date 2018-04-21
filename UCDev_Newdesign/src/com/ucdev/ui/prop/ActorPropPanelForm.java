@@ -3,6 +3,9 @@ package com.ucdev.ui.prop;
 import com.ucdev.db.control.DBControl;
 import com.ucdev.draw.control.DrawActor;
 import com.ucdev.draw.control.DrawPanel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,12 +18,16 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
     private final DrawActor actor;
     private final DBControl db_control = new DBControl();
 
+    private static Statement stmt = null;
+
     public ActorPropPanelForm(DrawActor ac) {
         initComponents();
 
         this.actor = ac;
 
         ac_name_txt.setText(actor.getName());
+
+        readRequirement();
     }
 
     @SuppressWarnings("unchecked")
@@ -39,6 +46,9 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
         cancel_btn = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         ac_id_rel = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        req_id_combo = new javax.swing.JComboBox<>();
+        req_detail_txt = new javax.swing.JLabel();
 
         jLabel1.setText("Actor ID");
 
@@ -64,6 +74,14 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
 
         ac_id_rel.setEditable(false);
 
+        jLabel6.setText("Requirement");
+
+        req_id_combo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                req_id_comboMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,31 +90,39 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(cancel_btn))
+                        .addComponent(req_detail_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel1))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(sterio_type_list, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(ac_id_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cancel_btn))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(39, 39, 39)
+                                        .addComponent(ac_id_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(14, 14, 14)))
+                                .addComponent(jLabel3)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(ac_id_rel, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                                        .addComponent(req_id_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGap(66, 66, 66)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
                         .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ac_name_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                            .addComponent(ac_desc_txt)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(18, 18, 18)
-                        .addComponent(ac_id_rel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 26, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ac_desc_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ac_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sterio_type_list, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,11 +135,17 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(ac_id_rel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(ac_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(req_id_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(req_detail_txt, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ac_name_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(ac_desc_txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -125,13 +157,20 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(save_btn)
                     .addComponent(cancel_btn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void save_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_btnActionPerformed
         saveObject();
     }//GEN-LAST:event_save_btnActionPerformed
+
+    private void req_id_comboMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_req_id_comboMouseClicked
+        try {
+            getSelectReqDetail(req_id_combo.getSelectedItem().toString());
+        } catch (Exception ex) {
+        }
+    }//GEN-LAST:event_req_id_comboMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -145,6 +184,9 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel req_detail_txt;
+    private javax.swing.JComboBox<String> req_id_combo;
     private javax.swing.JButton save_btn;
     private javax.swing.JComboBox<String> sterio_type_list;
     // End of variables declaration//GEN-END:variables
@@ -166,9 +208,43 @@ public class ActorPropPanelForm extends javax.swing.JPanel {
 
         if (!"".equals(ac_id) && ac_id != null) {
             db_control.getConnectDB();
-            db_control.insertActorProperties(ac_id, ac_name, ac_desc, ac_type, ac_obj);
+            if (req_id_combo.getSelectedItem() == null) {
+                db_control.insertActorProperties(ac_id, ac_name, ac_desc, ac_type, ac_obj, "");
+            } else {
+                db_control.insertActorProperties(ac_id, ac_name, ac_desc, ac_type, ac_obj, req_id_combo.getSelectedItem().toString());
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Input actor id");
+        }
+    }
+
+    public void readRequirement() {
+        db_control.getConnectDB();
+        try {
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select * from requirement");
+            while (results.next()) {
+                String req_id = results.getString(1);
+
+                req_id_combo.addItem(req_id);
+            }
+        } catch (SQLException ex) {
+        } catch (Exception ex) {
+        }
+    }
+
+    public void getSelectReqDetail(String req_id) {
+        req_detail_txt.repaint();
+        db_control.getConnectDB();
+        try {
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select req_detail from requirement where req_id='" + req_id + "'");
+            while (results.next()) {
+                String detail = results.getString(1);
+                req_detail_txt.setText("Detail : " + detail);
+            }
+        } catch (SQLException ex) {
+        } catch (Exception ex) {
         }
     }
 }

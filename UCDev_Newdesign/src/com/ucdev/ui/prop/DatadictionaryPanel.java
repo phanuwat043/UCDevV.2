@@ -8,12 +8,18 @@ import java.awt.GridLayout;
  * @author filmz
  */
 public class DatadictionaryPanel extends javax.swing.JPanel {
-    
+
+    private final String uc_id;
+    private final String uc_name;
+
     public DatadictionaryPanel(String id, String name) {
         initComponents();
-        
+
         uc_id_txt.setText(id);
         uc_name_txt.setText(name);
+
+        this.uc_id = id;
+        this.uc_name = name;
     }
 
     @SuppressWarnings("unchecked")
@@ -145,12 +151,14 @@ public class DatadictionaryPanel extends javax.swing.JPanel {
 
     private void add_inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_inputActionPerformed
 
-        input_panel.add(new DatadictProperty_Input());
+        input_panel.add(new DatadictProperty_Input(uc_id, uc_name));
+        input_panel.updateUI();
     }//GEN-LAST:event_add_inputActionPerformed
 
     private void add_outputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_outputActionPerformed
 
-        output_panel.add(new DatadictProperty_Output());
+        output_panel.add(new DatadictProperty_Output(uc_id, uc_name));
+        output_panel.updateUI();
     }//GEN-LAST:event_add_outputActionPerformed
 
 

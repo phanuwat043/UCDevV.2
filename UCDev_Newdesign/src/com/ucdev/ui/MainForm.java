@@ -15,6 +15,7 @@ import com.ucdev.gen.report.TransAtInfoHtml;
 import com.ucdev.gen.report.TransUcInfoHtml;
 import com.ucdev.gen.traceability.RequirementCategory;
 import com.ucdev.gen.traceability.RequirementTraceability;
+import com.ucdev.gen.traceability.TraceabilityMatrixUI;
 import com.ucdev.requirement.RequirementUI;
 import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
@@ -82,7 +83,7 @@ public class MainForm extends javax.swing.JFrame {
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
                         ObjButtons, ObjButtons[1]);
                 if (PromptResult == JOptionPane.YES_OPTION) {
-                    new DBControl().deleteDataFromDatabase();
+                    //new DBControl().deleteDataFromDatabase();
                     System.exit(0);
                 }
             }
@@ -384,7 +385,6 @@ public class MainForm extends javax.swing.JFrame {
         new DBControl().getConnectDB();
         new DBControl().queryActorProperties();
         new DBControl().queryUsecaseProperties();
-        new DBControl().queryRelation();
         new DBControl().queryRequirement();
 
         export_report.setEnabled(true);
@@ -400,13 +400,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
-        try {
-            traceabilityMetrixToHTML();
-            requirementCategoryToHTML();
-        } catch (ParserConfigurationException ex) {
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        }
+        openTraceabilityUI();
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
@@ -431,13 +425,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_export_reportActionPerformed
 
     private void export_requirementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_requirementActionPerformed
-        try {
-            traceabilityMetrixToHTML();
-            requirementCategoryToHTML();
-        } catch (ParserConfigurationException ex) {
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        }
+        openTraceabilityUI();
     }//GEN-LAST:event_export_requirementActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -531,31 +519,22 @@ public class MainForm extends javax.swing.JFrame {
     private void drawExtends() {
         Extends ext = new Extends(DrawPanel.uc_ext_1, DrawPanel.uc_ext_2);
         draw_panel.addExtends(ext.getUc_first(), ext.getUc_second());
-        List map = new ArrayList();
-        map.add(ext.getUc_first());
-        map.add(ext.getUc_second());
         db_control.getConnectDB();
-        db_control.insertExtendsRel(map);
+        db_control.insertExtendsRel(ext.getUc_first(), ext.getUc_second());
     }
 
     private void drawIncludes() {
         Include inc = new Include(DrawPanel.uc_inc_1, DrawPanel.uc_inc_2);
         draw_panel.addIncludes(inc.getUc_first(), inc.getUc_second());
         db_control.getConnectDB();
-        List map = new ArrayList();
-        map.add(inc.getUc_first());
-        map.add(inc.getUc_second());
-        db_control.insertIncludeRel(map);
+        db_control.insertIncludeRel(inc.getUc_first(), inc.getUc_second());
     }
 
     private void drawInherits() {
         Inherit inh = new Inherit(DrawPanel.uc_inh_1, DrawPanel.uc_inh_2);
         draw_panel.addInherits(inh.getUc_first(), inh.getUc_second());
         db_control.getConnectDB();
-        List map = new ArrayList();
-        map.add(inh.getUc_first());
-        map.add(inh.getUc_second());
-        db_control.insertInheritRel(map);
+        db_control.insertInheritRel(inh.getUc_first(), inh.getUc_second());
     }
 
     private void openDatadictionary() {
@@ -595,11 +574,15 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
-    private void traceabilityMetrixToHTML() {
+    private void openTraceabilityUI() {
+        new TraceabilityMatrixUI().show(true);
+    }
+
+    /*private void traceabilityMetrixToHTML() {
         new RequirementTraceability().RequirementTraceability(FileController.getInstance().readFolder());
     }
 
     private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
         new RequirementCategory().createRequirementCategory(FileController.getInstance().readFolder());
-    }
+    }*/
 }

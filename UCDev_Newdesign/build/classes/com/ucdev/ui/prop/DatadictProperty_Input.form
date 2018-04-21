@@ -98,10 +98,7 @@
     </Component>
     <Container class="javax.swing.JPanel" name="type_panel">
 
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-        <Property name="columns" type="int" value="0"/>
-        <Property name="rows" type="int" value="1"/>
-      </Layout>
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
