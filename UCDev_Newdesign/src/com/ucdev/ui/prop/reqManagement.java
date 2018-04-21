@@ -24,17 +24,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class reqManagement extends JFrame {
-        String req = "";
-        String result = "";
+        String req_Link = "";
+        String req_Boolean = "";
+        String resultLink = "";
+        String resultBoolean = "";
         private int reqCount = 0;
         private ArrayList reqIDList = new ArrayList();
         private ArrayList reqDesList = new ArrayList();
         private ArrayList reqLinkList = new ArrayList();
-
+        private ArrayList reqBoolean = new ArrayList();
+        
         DefaultTableModel model = null;
         private final DBControl db_control = new DBControl();
         private static Statement stmt = null;
@@ -60,9 +66,10 @@ public class reqManagement extends JFrame {
 	 * Create the frame.
 	 */
 	public reqManagement() throws SQLException {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 580, 242);
-		setTitle("Test");
+ 
+		setTitle("Requirement Management");
 		getContentPane().setLayout(null);
 
 		// ScrollPane for Table
@@ -76,8 +83,6 @@ public class reqManagement extends JFrame {
                  
                 //init
                 initTableData();
-                prepareRequirement();
-                //System.out.println("NUMrow: "+reqCount);
                 
 		// Model for Table
 		model = new DefaultTableModel() {
@@ -112,16 +117,15 @@ public class reqManagement extends JFrame {
 			}
 		};
 		table.setModel(model);
-
 		model.addColumn("ID");
 		model.addColumn("Description");
                 addTableColumn();//add from database
-				
-               
+                
+                
+                
 		// create Data Row (pull from database)
 		for (int i = 0; i < reqCount; i++) { 
-                      
-                      
+ 
                       setValueColumn(i); //set Value to each column
 		// Get Row Selected
 		JButton updateBtn = new JButton("Update");
@@ -133,14 +137,18 @@ public class reqManagement extends JFrame {
                                     for (int j = 2; j < table.getColumnCount(); j++) {
                                         Boolean chked = Boolean.valueOf(table.getValueAt(i, j).toString());
                                         String dataCol1 = table.getColumnName(j);
+                                        
                                         if (chked) { //if check show dataColl
-                                            req = getResultReqLink(dataCol1);
+                                            req_Link = getResultLink(dataCol1);
+                                            req_Boolean = getResultBoolean("true");
+                                        }else{
+                                            req_Boolean = getResultBoolean("false");
                                         }
                                     }
-                                    updateRequirementLink(req,i);
-                                    JOptionPane.showMessageDialog(null, req);
-                                    clearResultReqLink();
+                                    updateRequirementLink(req_Link,req_Boolean,i);
+                                    clearResultReq();
                                 }
+                                JOptionPane.showMessageDialog(null, "Update Success!!!");
                             } catch (SQLException ex) {
                                 Logger.getLogger(reqManagement.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -166,30 +174,53 @@ public class reqManagement extends JFrame {
 		});
 		reportBtn.setBounds(310, 149, 131, 23);
 		getContentPane().add(reportBtn);
-
-
 	}
-            
+                String n = "null";
+                if((reqBoolean.get(0).toString()).equals(n)){  
+                }else{
+                     prepareRequirement();
+                }
     }
         
+    
+        
     private void prepareRequirement() throws SQLException {
-        db_control.getConnectDB();
+       db_control.getConnectDB();
         stmt = db_control.conn.createStatement();
+        
         for (int i = 0; i < table.getRowCount(); i++) {
             for (int j = 2; j < table.getColumnCount(); j++) {
-                        model.setValueAt(true, i, j);   
-            }
+                int num = j - 2;
+                ArrayList reqBooleanList = getSplitReq(reqBoolean.get(i).toString());
+                String compare = "true";
+                if ((reqBooleanList.get(num).toString()).equals(compare)) { //if check show dataColl
+                    model.setValueAt(true, i, j);
+                } else {
+                    model.setValueAt(false, i, j);
+                }
+            } 
         }
-    }    
+    } 
+    
+   
+    private ArrayList getSplitReq(String reqLinkList){ //set boolean
+            ArrayList postReqLink = new ArrayList();
+            String[] preReqLink = reqLinkList.split(",");
+            for (int i = 0; i < preReqLink.length; i++) {
+                 postReqLink.add(preReqLink[i]);
+            }
+            return postReqLink;
+    }
+    
 
-    private void updateRequirementLink(String req_link,int i) {
+    private void updateRequirementLink(String req_link,String req_boolean,int i) {
         db_control.getConnectDB();
         try {
             stmt = db_control.conn.createStatement();
                
                 String req_id = (String) table.getValueAt(i, 0);
                 String req_detail = (String) table.getValueAt(i, 1);
-                stmt.execute("insert into requirement values('" + req_id + "','" + req_detail + "','" + req_link + "')");
+                stmt.execute("insert into requirement values('" + req_id + "','" + req_detail + "','" + req_link + "','" + req_boolean + "')");
             
             if (stmt.isClosed()) {
                 JOptionPane.showMessageDialog(null, "update data success!");
@@ -200,20 +231,28 @@ public class reqManagement extends JFrame {
     }
 
     
-    
-    
-    private String getResultReqLink(String link) {
-        result = result + "," + link;
-        if (result.startsWith(",")) {
-            result = result.replace(",", "");
+    private String getResultLink(String link) {
+        resultLink = resultLink + "," + link;
+        if (resultLink.startsWith(",")) {
+            resultLink = resultLink.replace(",", "");
         }
-        return result;
+        return resultLink;
+    }
+    
+     private String getResultBoolean(String boo) {
+        resultBoolean = resultBoolean + "," + boo;
+        if (resultBoolean.startsWith(",")) {
+            resultBoolean = resultBoolean.replace(",", "");
+        }
+        return resultBoolean;
+    }
+    
+    //เปลี่ยนค่าให้0
+    private void clearResultReq() {
+        this.resultLink = "";
+        this.resultBoolean = "";
     }
 
-    private void clearResultReqLink() {
-        this.result = "";
-    }
-    
     private void addTableColumn() throws SQLException{
         db_control.getConnectDB();
         stmt = db_control.conn.createStatement();
@@ -225,23 +264,16 @@ public class reqManagement extends JFrame {
     }
     
      private void setValueColumn(int i) throws SQLException {
-        db_control.getConnectDB();
-        stmt = db_control.conn.createStatement();
-        String s = "SELECT * FROM requirement";
-        ResultSet rs = stmt.executeQuery(s);
-
              model.addRow(new Object[0]);
 	     model.setValueAt(this.reqIDList.get(i).toString(), i, 0);
 	     model.setValueAt(this.reqDesList.get(i).toString(), i, 1);
            for (int j = 2; j < table.getColumnCount(); j++) {
              model.setValueAt(false, i, j);
             }  
-        
     }
      
      
-     
-     
+      
      private void initTableData() throws SQLException{
         db_control.getConnectDB();
         stmt = db_control.conn.createStatement();
@@ -252,9 +284,7 @@ public class reqManagement extends JFrame {
              reqIDList.add(rs.getString("REQ_ID"));
              reqDesList.add(rs.getString("REQ_DETAIL"));
              reqLinkList.add(rs.getString("REQ_LINK"));
-             
-        }
-     
-     }
-        
+             reqBoolean.add(rs.getString("REQ_BOOLEAN"));
+        } 
+     }      
 }
