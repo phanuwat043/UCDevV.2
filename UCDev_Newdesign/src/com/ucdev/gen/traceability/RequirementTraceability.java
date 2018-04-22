@@ -38,8 +38,9 @@ public class RequirementTraceability {
             Map noCol = new HashMap(); //map ตำแหน่งโดยcolumnของแต่ละแถว
 
             Map map1 = new HashMap(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้ ซึ่งในนี้เป็นแบบmultivalues
-            String pathXML = path.getPathXML();
-            File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+            //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
+            //File fXmlFile = new File(url); //For Test
+            File fXmlFile = new File(path.getPathXML() + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -191,12 +192,14 @@ public class RequirementTraceability {
                     + resultTable
                     + "</table></body></html>";
             String pathHTML = path.getPathHTML();
+            //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\traceabilitymatrix.html"; //For Test
+            //File f = new File(urlTest); //For Test
             File f = new File(pathHTML + "traceabilitymatrix.html");
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(f));
                 if (f.canWrite()) {
-                    JOptionPane.showMessageDialog(null, "Generate requirement success!");
+                    JOptionPane.showMessageDialog(null, "Generated requirement traceability!");
                 }
                 bw.write(html);
                 bw.close();

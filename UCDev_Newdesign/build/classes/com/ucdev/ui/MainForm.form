@@ -101,20 +101,28 @@
             <Property name="text" type="java.lang.String" value="Requirement"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="TraceMatrix_jMenu">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Traceability Matrix"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="TraceMatrix_jMenuActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+            <MenuItem class="javax.swing.JMenuItem" name="reqManageMenuItem">
               <Properties>
                 <Property name="label" type="java.lang.String" value="Requirement Management"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reqManageMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="showTraceMatrixMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Show Traceability Matrix"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showTraceMatrixMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="showReqDesMenuItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Show Requirement Description"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showReqDesMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

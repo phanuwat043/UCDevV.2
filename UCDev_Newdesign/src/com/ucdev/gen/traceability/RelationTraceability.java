@@ -39,6 +39,8 @@ public class RelationTraceability {
             FileController path = new FileController();
             
             String pathXML = path.getPathXML();
+            //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
+            //File fXmlFile = new File(url); //For Test
             File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -165,6 +167,8 @@ public class RelationTraceability {
                     + resultTable
                     + "</table></body></html>";
             String pathHTML = path.getPathHTML();
+            //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\"; //For Test
+            //File f = new File(urlTest+ nameHTMLofReq + ".html"); //For Test
             File f = new File(pathHTML + nameHTMLofReq + ".html");
 
             try {

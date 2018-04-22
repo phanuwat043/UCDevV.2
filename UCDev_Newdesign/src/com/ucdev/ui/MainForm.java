@@ -8,9 +8,11 @@ import com.ucdev.draw.control.DrawUsecase;
 import com.ucdev.draw.control.Extends;
 import com.ucdev.draw.control.Include;
 import com.ucdev.draw.control.Inherit;
+import com.ucdev.gen.report.GenActor;
 import com.ucdev.ui.prop.ActorPropPanelForm;
 import com.ucdev.ui.prop.UsecasePropPanelForm;
 import com.ucdev.gen.report.GenPDF;
+import com.ucdev.gen.report.GenUseCase;
 import com.ucdev.gen.report.NewJFrame;
 import com.ucdev.gen.report.TransAtInfoHtmlRe;
 import com.ucdev.gen.report.TransUcInfoHtmlRe;
@@ -20,7 +22,6 @@ import com.ucdev.requirement.RequirementUI;
 import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
 import com.ucdev.ui.prop.reqManagement;
-import com.ucdev.ui.prop.requirementManage;
 import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -79,6 +80,8 @@ public class MainForm extends javax.swing.JFrame {
         
         export_report.setEnabled(false);
         export_requirement.setEnabled(false);
+        showReqDesMenuItem.setEnabled(false);
+        showTraceMatrixMenuItem.setEnabled(false);
         
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -126,8 +129,9 @@ public class MainForm extends javax.swing.JFrame {
         gen_pdf_jmenu = new javax.swing.JMenuItem();
         diagram_capture_jmenu = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        TraceMatrix_jMenu = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        reqManageMenuItem = new javax.swing.JMenuItem();
+        showTraceMatrixMenuItem = new javax.swing.JMenuItem();
+        showReqDesMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         data_dict_item = new javax.swing.JMenuItem();
 
@@ -314,21 +318,29 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenu1.setText("Requirement");
 
-        TraceMatrix_jMenu.setText("Traceability Matrix");
-        TraceMatrix_jMenu.addActionListener(new java.awt.event.ActionListener() {
+        reqManageMenuItem.setLabel("Requirement Management");
+        reqManageMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TraceMatrix_jMenuActionPerformed(evt);
+                reqManageMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(TraceMatrix_jMenu);
+        jMenu1.add(reqManageMenuItem);
 
-        jMenuItem1.setLabel("Requirement Management");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        showTraceMatrixMenuItem.setText("Show Traceability Matrix");
+        showTraceMatrixMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                showTraceMatrixMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(showTraceMatrixMenuItem);
+
+        showReqDesMenuItem.setText("Show Requirement Description");
+        showReqDesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showReqDesMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(showReqDesMenuItem);
 
         jMenuBar1.add(jMenu1);
 
@@ -407,6 +419,8 @@ public class MainForm extends javax.swing.JFrame {
         
         export_report.setEnabled(true);
         export_requirement.setEnabled(true);
+        showReqDesMenuItem.setEnabled(true);
+        showTraceMatrixMenuItem.setEnabled(true);
     }//GEN-LAST:event_save_itemActionPerformed
 
     private void gen_pdf_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_pdf_jmenuActionPerformed
@@ -417,23 +431,18 @@ public class MainForm extends javax.swing.JFrame {
         genActorToHTML();
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
-    private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
+    private void showTraceMatrixMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTraceMatrixMenuItemActionPerformed
         try {
-            traceabilityMetrixToHTML();
-            requirementCategoryToHTML();
-            String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\traceabilitymatrix.html";
-            //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
+           traceabilityMetrixToHTML();
+           String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\traceabilitymatrix.html";
+           //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
            File htmlFile = new File(url);
            Desktop.getDesktop().browse(htmlFile.toURI());
 
         
         } catch (IOException ex) {
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
+    }//GEN-LAST:event_showTraceMatrixMenuItemActionPerformed
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
         captureDiagram();
@@ -466,16 +475,33 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_export_requirementActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void reqManageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reqManageMenuItemActionPerformed
         try { 
             requirementManagement();
         } catch (SQLException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_reqManageMenuItemActionPerformed
+
+    private void showReqDesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showReqDesMenuItemActionPerformed
+        try {                                                   
+            requirementCategoryToHTML();
+            String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\requirementcategories.html";
+            //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
+            File htmlFile = new File(url);
+            Desktop.getDesktop().browse(htmlFile.toURI());
+            
+        } catch (IOException ex) {   
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }//GEN-LAST:event_showReqDesMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem TraceMatrix_jMenu;
     private javax.swing.JButton actorBtn;
     private javax.swing.JButton associationBtn;
     private javax.swing.JMenuItem data_dict_item;
@@ -493,14 +519,16 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenuItem reqManageMenuItem;
     private javax.swing.JMenuItem save_item;
+    private javax.swing.JMenuItem showReqDesMenuItem;
+    private javax.swing.JMenuItem showTraceMatrixMenuItem;
     private javax.swing.JButton systemBtn;
     private javax.swing.JButton usecaseBtn;
     // End of variables declaration//GEN-END:variables
@@ -599,11 +627,11 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void genActorToHTML() {
-        //new TransAtInfoHtmlRe().GenHTML(FileController.getInstance().readFolder());
+        new GenActor().show();
     }
 
     private void genUsecaseToHTML() {
-        //new TransUcInfoHtmlRe().GenHTML(FileController.getInstance().readFolder());
+        new GenUseCase().show();
     }
 
     private void genPDF() {
