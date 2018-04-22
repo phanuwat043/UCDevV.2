@@ -78,7 +78,6 @@ public class reqManagement extends JFrame {
 		getContentPane().add(scrollPane);
 
 		// Table
-		
 		scrollPane.setViewportView(table);
                  
                 //init
@@ -132,6 +131,7 @@ public class reqManagement extends JFrame {
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                             try {
+                                
                                 stmt.execute("DELETE FROM requirement");
                                 for (int i = 0; i < table.getRowCount(); i++) {
                                     for (int j = 2; j < table.getColumnCount(); j++) {
@@ -148,35 +148,17 @@ public class reqManagement extends JFrame {
                                     updateRequirementLink(req_Link,req_Boolean,i);
                                     clearResultReq();
                                 }
-                                JOptionPane.showMessageDialog(null, "Update Success!!!");
+                                dispose();
                             } catch (SQLException ex) {
                                 Logger.getLogger(reqManagement.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                                
-                                 
+                            }          
 			}
 		});
-		updateBtn.setBounds(120, 149, 131, 23);
+		updateBtn.setBounds(220, 149, 131, 23);
 		getContentPane().add(updateBtn);
-                
-                JButton reportBtn = new JButton("Report");
-		reportBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-                            String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\requirementcategories.html";
-                            //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
-                            File htmlFile = new File(url);
-                            try {
-                                Desktop.getDesktop().browse(htmlFile.toURI());
-                            } catch (IOException ex) {
-                                Logger.getLogger(requirementManage.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-			}
-		});
-		reportBtn.setBounds(310, 149, 131, 23);
-		getContentPane().add(reportBtn);
 	}
                 String n = "null";
-                if((reqBoolean.get(0).toString()).equals(n)){  
+                if((reqBoolean.get(0).toString()).equals(n)||reqBoolean.equals(null)){  
                 }else{
                      prepareRequirement();
                 }
