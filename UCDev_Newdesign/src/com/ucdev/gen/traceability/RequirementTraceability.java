@@ -1,5 +1,6 @@
 package com.ucdev.gen.traceability;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -24,10 +25,11 @@ import javax.swing.JOptionPane;
  */
 public class RequirementTraceability {
 
-    public void RequirementTraceability(File file) {
+    public void createRequirementTraceability() {
         try {
             RequirementTraceability req = new RequirementTraceability();
-
+            FileController path = new FileController(); 
+            
             List<String> relColumn = new ArrayList();//เก็บcolumnทั้งหมดแบบไม่คัดตัวซ้ำออก
             List<String> relRow = new ArrayList(); //เก็บRowทั้งหมดแบบไม่คัดตัวซ้ำออก
             List<String> relColumnResult = new ArrayList(); //เก็บcolumnที่เอาตัวซ้ำออกแล้ว
@@ -36,8 +38,9 @@ public class RequirementTraceability {
             Map noCol = new HashMap(); //map ตำแหน่งโดยcolumnของแต่ละแถว
 
             Map map1 = new HashMap(); //map เพื่อไว้หาคู่ที่ทำการเซ็ทไว้ ซึ่งในนี้เป็นแบบmultivalues
-            String pathXML = file.getPath() + "\\";
-            File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+            //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
+            //File fXmlFile = new File(url); //For Test
+            File fXmlFile = new File(path.getPathXML() + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -63,7 +66,7 @@ public class RequirementTraceability {
 
                     System.out.println(firstNum + " : " + lastNum);
                     req.createHTML(row);
-                    trace.createRelationToHTML(temp, row, firstNum, lastNum, file);
+                    trace.createRelationToHTML(temp, row, firstNum, lastNum);
 
                     for (int ucList = 0; ucList < eElement.getElementsByTagName("uc").getLength(); ucList++) {
                         relColumn.add(eElement.getElementsByTagName("uc").item(ucList).getTextContent());//add to arraylist
@@ -188,13 +191,15 @@ public class RequirementTraceability {
                     + "<table border='1' align='center'>"
                     + resultTable
                     + "</table></body></html>";
-            String pathHTML = file.getPath() + "\\Documents\\";
+            String pathHTML = path.getPathHTML();
+            //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\traceabilitymatrix.html"; //For Test
+            //File f = new File(urlTest); //For Test
             File f = new File(pathHTML + "traceabilitymatrix.html");
 
             try {
                 BufferedWriter bw = new BufferedWriter(new FileWriter(f));
                 if (f.canWrite()) {
-                    JOptionPane.showMessageDialog(null, "Generate requirement success!");
+                    JOptionPane.showMessageDialog(null, "Generated requirement traceability!");
                 }
                 bw.write(html);
                 bw.close();

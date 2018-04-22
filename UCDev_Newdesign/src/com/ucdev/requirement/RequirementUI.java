@@ -42,7 +42,7 @@ public class RequirementUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Req ID", "Req detail"
+                "Req ID", "Req description"
             }
         ) {
             Class[] types = new Class [] {
@@ -150,13 +150,14 @@ public class RequirementUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void insertRequirement() {
-        db_control.getConnectDB();
+        
         try {
+            db_control.getConnectDB();
             stmt = db_control.conn.createStatement();
             for (int i = 0; i < req_table.getRowCount(); i++) {
                 String req_id = (String) req_table.getValueAt(i, 0);
                 String req_detail = (String) req_table.getValueAt(i, 1);
-                stmt.execute("insert into requirement values('" + req_id + "','" + req_detail + "')");
+                stmt.execute("insert into requirement values('" + req_id + "','" + req_detail + "','null','null')");
             }
             if (stmt.isClosed()) {
                 JOptionPane.showMessageDialog(null, "save data success!");

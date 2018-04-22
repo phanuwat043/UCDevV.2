@@ -31,6 +31,22 @@ public class FileController {
         return instance;
     }
 
+    public String getPathXML(){
+        String path = "";  
+       if (getFILE_NAME() != null) {   
+       path = "C:\\UCDev\\" + getFILE_NAME();
+       }
+       return path;
+    }
+    
+    public String getPathHTML(){
+           String path = "";  
+       if (getFILE_NAME() != null) {   
+       path = "C:\\UCDev\\" + getFILE_NAME()+"\\Documents";
+       }
+       return path;
+    }
+    
     public void createFolder() {
         if (getFILE_NAME() != null) {
             Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME() + "\\Documents");

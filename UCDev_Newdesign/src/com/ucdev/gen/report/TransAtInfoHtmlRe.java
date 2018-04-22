@@ -1,13 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.ucdev.gen.report;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,10 +34,9 @@ import org.xml.sax.SAXException;
  *
  * @author FilmKhonDee
  */
-public class TransAtInfoHtml {
-
-    public void GenHTML(File file) throws SAXException, IOException, ParserConfigurationException {
-        String pathXML = file.getPath() + "\\";
+public class TransAtInfoHtmlRe{
+    public void GenHTML(String linkpath,String imgpath,String filename) throws SAXException, IOException, ParserConfigurationException {
+        String pathXML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
         File fXmlFile = new File(pathXML + "actor.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -31,9 +46,14 @@ public class TransAtInfoHtml {
         ArrayList actorName = new ArrayList();
         ArrayList actorDes = new ArrayList();
         ArrayList actorType = new ArrayList();
-
+        
+        System.out.println(linkpath);
+        System.out.println(imgpath);
+        
         String createBodyHTML = "";
-
+        String link = "<a href=\""+linkpath+"\">UseCaseinfo</a>";
+        String img = "<img src=\""+imgpath+"\" alt=\"Mountain\"></img>";
+        
         for (int temp = 0; temp < nList.getLength(); temp++) {//for add to arraylist
             Node nNode = nList.item(temp);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -43,14 +63,17 @@ public class TransAtInfoHtml {
                 actorType.add(eElement.getElementsByTagName("actor_type").item(0).getTextContent());//add to arraylist
             }
         }
-
+ 
         for (int temp = 0; temp < nList.getLength(); temp++) {//for list from arraylist
             String bodyForm = "<article>\n"
                     + "    <p> <strong> Actor Name </strong> : <i>" + actorName.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Description </strong> : <i>" + actorDes.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Type </strong> : <i>" + actorType.get(temp) + "</i> </p>\n"
-                    + "</article><hr size=1 color=grey width=87% align=right>";
-            createBodyHTML = createBodyHTML + bodyForm;
+                    + "<p>" + img + "</p>\n"
+                    + link
+                    + "\n"
+                    + "</article>";
+            createBodyHTML = createBodyHTML+bodyForm;
         }
 
         String html = "<html xsl:version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n"
@@ -107,11 +130,11 @@ public class TransAtInfoHtml {
                 + "  \n"
                 + "<nav>\n"
                 + "  <ul>\n"
-                + "    <li><p>USE CASE</p></li>\n"
+                + "    <li><p>Actor</p></li>\n"
                 + "  </ul>\n"
                 + "</nav>\n"
                 + "\n"
-                + createBodyHTML
+                +createBodyHTML
                 + "\n"
                 + "<footer>Copyright UCDEV</footer>\n"
                 + "\n"
@@ -120,14 +143,15 @@ public class TransAtInfoHtml {
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-        String pathHTML = file.getPath() + "\\Documents\\";
-        File f = new File(pathHTML + "ActorInfo.html");
+        String pathHTML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
+        String fullfilename = filename+".html";
+        File f = new File(pathHTML + fullfilename);
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             if (f.canWrite()) {
                 //JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
-                //System.out.println("success!!!");
+                System.out.println("success!!!");
             }
             bw.write(html);
             bw.close();
@@ -137,3 +161,5 @@ public class TransAtInfoHtml {
 
     }
 }
+
+

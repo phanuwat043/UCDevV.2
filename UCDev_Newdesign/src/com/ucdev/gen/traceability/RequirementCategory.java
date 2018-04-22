@@ -1,10 +1,12 @@
 package com.ucdev.gen.traceability;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,11 +21,11 @@ import org.xml.sax.SAXException;
  * @author 5730213057
  */
 public class RequirementCategory {
-
-    public void createRequirementCategory(File file) throws ParserConfigurationException, SAXException, IOException {
-
-        String pathXML = file.getPath()+"\\";
-        File fXmlFile = new File(pathXML + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+    public void createRequirementCategory() throws ParserConfigurationException, SAXException, IOException {
+        FileController path = new FileController();
+        //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
+        //File fXmlFile = new File(url); //For Test
+        File fXmlFile = new File(path.getPathXML() + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -31,6 +33,8 @@ public class RequirementCategory {
         NodeList nList = doc.getElementsByTagName("requirement");
         ArrayList id = new ArrayList();
         ArrayList des = new ArrayList();
+        ArrayList reqrel = new ArrayList();
+        
 
         String trRow = "";
 
@@ -42,20 +46,27 @@ public class RequirementCategory {
                 String reqID = eElement.getAttribute("id");//id of req...
                 System.out.println("REQ ID : " + reqID);
                 id.add(reqID);//add to arraylist
+                
                 String reqDes = eElement.getAttribute("description");//id of req...
                 System.out.println("REQ DES : " + reqDes);
                 des.add(reqDes);
-
+     
+                String reqRel = eElement.getAttribute("reqrelation");//id of req...
+                System.out.println("REQ REL : " + reqRel);
+                reqrel.add(reqRel);
+                 
             }
         }
-
-        String firstColumn = "<tr style='background-color: #4da6ff;color: white;font-family: sans-serif;'><th>Requirement ID</th><th>Requirements</th></tr>";
+               String firstColumn = "";
+               firstColumn = "<tr style='background-color: #4da6ff;color: white;font-family: sans-serif;'><th>Requirement ID</th><th>Requirements</th><th>Relation</th></tr>";
+           
+        
 
         ArrayList trList = new ArrayList();
         trList.add(firstColumn);
         for (int i = 0; i < id.size(); i++) {
             String linkToRelation = id.get(i) + ".html";
-            trRow = "<tr><td style='background-color: #CED8F6;color: white;font-family: sans-serif;'><a href='" + linkToRelation + "'>" + id.get(i) + "</a></td><td>" + des.get(i) + "</td></tr>";
+            trRow = "<tr><td style='background-color: #CED8F6;color: white;font-family: sans-serif;'><a href='" + linkToRelation + "'>" + id.get(i) + "</a></td><td>" + des.get(i) + "</td><td>" + reqrel.get(i) + "</td></tr>";
             trList.add(trRow);
             trRow = "";
         }
@@ -67,7 +78,7 @@ public class RequirementCategory {
         }
 
         //ใช้ในการสร้างฟอร์มhtml
-        String html = "<html><title>Requirement Categories</title>"
+        String html = "<html><title>Requirement Description</title>"
                 + "<head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=UTF-8\"><style>\n"
                 + "table {\n"
                 + "    border-collapse: collapse;\n"
@@ -96,12 +107,14 @@ public class RequirementCategory {
                 + "<table border='1' align='center'>"
                 + resultTable
                 + "</table></body></html>";
-        String pathHTML = file.getPath()+"\\Documents\\";
+        String pathHTML = path.getPathHTML();
+        //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\requirementcategories.html"; //For Test
+        //File f = new File(urlTest); //For Test
         File f = new File(pathHTML + "requirementcategories.html");
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
         if (f.canWrite()) {
-            System.out.println("requirement categories success!!!");
+            JOptionPane.showMessageDialog(null, "Generated requirement description!");
         }
         bw.write(html);
         bw.close();

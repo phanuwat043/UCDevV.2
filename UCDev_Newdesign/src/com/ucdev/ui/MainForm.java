@@ -8,22 +8,31 @@ import com.ucdev.draw.control.DrawUsecase;
 import com.ucdev.draw.control.Extends;
 import com.ucdev.draw.control.Include;
 import com.ucdev.draw.control.Inherit;
+import com.ucdev.gen.report.GenActor;
 import com.ucdev.ui.prop.ActorPropPanelForm;
 import com.ucdev.ui.prop.UsecasePropPanelForm;
 import com.ucdev.gen.report.GenPDF;
-import com.ucdev.gen.report.TransAtInfoHtml;
-import com.ucdev.gen.report.TransUcInfoHtml;
+import com.ucdev.gen.report.GenUseCase;
+import com.ucdev.gen.report.NewJFrame;
+import com.ucdev.gen.report.TransAtInfoHtmlRe;
+import com.ucdev.gen.report.TransUcInfoHtmlRe;
 import com.ucdev.gen.traceability.RequirementCategory;
 import com.ucdev.gen.traceability.RequirementTraceability;
 import com.ucdev.gen.traceability.TraceabilityMatrixUI;
 import com.ucdev.requirement.RequirementUI;
 import com.ucdev.save.control.FileController;
 import com.ucdev.ui.prop.DataDict_UI;
+import com.ucdev.ui.prop.reqManagement;
+import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +71,8 @@ public class MainForm extends javax.swing.JFrame {
     private int uc = 0;
 
     private final Map map = new HashMap();
-
+    FileController path = new FileController();
+    
     public MainForm() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -71,7 +81,13 @@ public class MainForm extends javax.swing.JFrame {
 
         export_report.setEnabled(false);
         export_requirement.setEnabled(false);
+<<<<<<< HEAD
 
+=======
+        showReqDesMenuItem.setEnabled(false);
+        showTraceMatrixMenuItem.setEnabled(false);
+        
+>>>>>>> origin/traceability-matrix
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -118,7 +134,9 @@ public class MainForm extends javax.swing.JFrame {
         gen_pdf_jmenu = new javax.swing.JMenuItem();
         diagram_capture_jmenu = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        TraceMatrix_jMenu = new javax.swing.JMenuItem();
+        reqManageMenuItem = new javax.swing.JMenuItem();
+        showTraceMatrixMenuItem = new javax.swing.JMenuItem();
+        showReqDesMenuItem = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         data_dict_item = new javax.swing.JMenuItem();
 
@@ -305,13 +323,29 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenu1.setText("Requirement");
 
-        TraceMatrix_jMenu.setText("Traceability Matrix");
-        TraceMatrix_jMenu.addActionListener(new java.awt.event.ActionListener() {
+        reqManageMenuItem.setLabel("Requirement Management");
+        reqManageMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TraceMatrix_jMenuActionPerformed(evt);
+                reqManageMenuItemActionPerformed(evt);
             }
         });
-        jMenu1.add(TraceMatrix_jMenu);
+        jMenu1.add(reqManageMenuItem);
+
+        showTraceMatrixMenuItem.setText("Show Traceability Matrix");
+        showTraceMatrixMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTraceMatrixMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(showTraceMatrixMenuItem);
+
+        showReqDesMenuItem.setText("Show Requirement Description");
+        showReqDesMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showReqDesMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(showReqDesMenuItem);
 
         jMenuBar1.add(jMenu1);
 
@@ -389,6 +423,8 @@ public class MainForm extends javax.swing.JFrame {
 
         export_report.setEnabled(true);
         export_requirement.setEnabled(true);
+        showReqDesMenuItem.setEnabled(true);
+        showTraceMatrixMenuItem.setEnabled(true);
     }//GEN-LAST:event_save_itemActionPerformed
 
     private void gen_pdf_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gen_pdf_jmenuActionPerformed
@@ -399,9 +435,24 @@ public class MainForm extends javax.swing.JFrame {
         genActorToHTML();
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
+<<<<<<< HEAD
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
         openTraceabilityUI();
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
+=======
+    private void showTraceMatrixMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTraceMatrixMenuItemActionPerformed
+        try {
+           traceabilityMetrixToHTML();
+           String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\traceabilitymatrix.html";
+           //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
+           File htmlFile = new File(url);
+           Desktop.getDesktop().browse(htmlFile.toURI());
+
+        
+        } catch (IOException ex) {
+        }
+    }//GEN-LAST:event_showTraceMatrixMenuItemActionPerformed
+>>>>>>> origin/traceability-matrix
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
         captureDiagram();
@@ -428,8 +479,33 @@ public class MainForm extends javax.swing.JFrame {
         openTraceabilityUI();
     }//GEN-LAST:event_export_requirementActionPerformed
 
+    private void reqManageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reqManageMenuItemActionPerformed
+        try { 
+            requirementManagement();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reqManageMenuItemActionPerformed
+
+    private void showReqDesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showReqDesMenuItemActionPerformed
+        try {                                                   
+            requirementCategoryToHTML();
+            String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementHTML\\requirementcategories.html";
+            //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
+            File htmlFile = new File(url);
+            Desktop.getDesktop().browse(htmlFile.toURI());
+            
+        } catch (IOException ex) {   
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }//GEN-LAST:event_showReqDesMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem TraceMatrix_jMenu;
     private javax.swing.JButton actorBtn;
     private javax.swing.JButton associationBtn;
     private javax.swing.JMenuItem data_dict_item;
@@ -453,12 +529,15 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JMenuItem reqManageMenuItem;
     private javax.swing.JMenuItem save_item;
+    private javax.swing.JMenuItem showReqDesMenuItem;
+    private javax.swing.JMenuItem showTraceMatrixMenuItem;
     private javax.swing.JButton systemBtn;
     private javax.swing.JButton usecaseBtn;
     // End of variables declaration//GEN-END:variables
 
-    private void createPanel() {
+    private void createPanel() { //xml tree tabpane
         if (FileController.getInstance().getFILE_NAME() == null) {
             String file = JOptionPane.showInputDialog("Please input your project name : ");
             FileController.getInstance().setFILE_NAME(file);
@@ -543,21 +622,11 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void genActorToHTML() {
-        try {
-            new TransAtInfoHtml().GenHTML(FileController.getInstance().readFolder());
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        } catch (ParserConfigurationException ex) {
-        }
+        new GenActor().show();
     }
 
     private void genUsecaseToHTML() {
-        try {
-            new TransUcInfoHtml().GenHTML(FileController.getInstance().readFolder());
-        } catch (ParserConfigurationException ex) {
-        } catch (SAXException ex) {
-        } catch (IOException ex) {
-        }
+        new GenUseCase().show();
     }
 
     private void genPDF() {
@@ -566,6 +635,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void captureDiagram() {
         try {
+            new NewJFrame().show();
             BufferedImage image = new BufferedImage(draw_panel.getWidth(), draw_panel.getHeight(), BufferedImage.TYPE_INT_RGB);
             draw_panel.paint(image.getGraphics());
             ImageIO.write(image, "png", new File("diagram.png"));
@@ -574,6 +644,7 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
+<<<<<<< HEAD
     private void openTraceabilityUI() {
         new TraceabilityMatrixUI().show(true);
     }
@@ -585,4 +656,18 @@ public class MainForm extends javax.swing.JFrame {
     private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
         new RequirementCategory().createRequirementCategory(FileController.getInstance().readFolder());
     }*/
+=======
+    private void traceabilityMetrixToHTML() {
+        new RequirementTraceability().createRequirementTraceability();
+    }
+
+    private void requirementCategoryToHTML() throws ParserConfigurationException, SAXException, IOException {
+        new RequirementCategory().createRequirementCategory();
+    }
+    
+    private void requirementManagement() throws SQLException {
+        reqManagement reqMan = new reqManagement();
+        reqMan.show();
+    }
+>>>>>>> origin/traceability-matrix
 }

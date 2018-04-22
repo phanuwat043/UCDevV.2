@@ -24,9 +24,10 @@ import java.io.FilterInputStream;
  * @author Home
  */
 public class generatePDF {
-    public void GenPDF(String file) throws DocumentException, IOException{
+    public void GenPDF(String file,String filename) throws DocumentException, IOException{
         Document document = new Document();
-        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
+        String fullfilename = filename+".pdf";
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fullfilename));
         document.open();
         FileInputStream inputStream = new FileInputStream(file);
         XMLWorkerHelper.getInstance().parseXHtml(writer, document, inputStream,null);
