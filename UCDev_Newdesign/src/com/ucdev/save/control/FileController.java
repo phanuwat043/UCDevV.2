@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -31,22 +30,22 @@ public class FileController {
         return instance;
     }
 
-    public String getPathXML(){
-        String path = "";  
-       if (getFILE_NAME() != null) {   
-       path = "C:\\UCDev\\" + getFILE_NAME();
-       }
-       return path;
+    public String getPathXML() {
+        String path = "";
+        if (getFILE_NAME() != null) {
+            path = "C:\\UCDev\\" + getFILE_NAME();
+        }
+        return path;
     }
-    
-    public String getPathHTML(){
-           String path = "";  
-       if (getFILE_NAME() != null) {   
-       path = "C:\\UCDev\\" + getFILE_NAME()+"\\Documents";
-       }
-       return path;
+
+    public String getPathHTML() {
+        String path = "";
+        if (getFILE_NAME() != null) {
+            path = "C:\\UCDev\\" + getFILE_NAME() + "\\Documents";
+        }
+        return path;
     }
-    
+
     public void createFolder() {
         if (getFILE_NAME() != null) {
             Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME() + "\\Documents");

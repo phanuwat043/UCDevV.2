@@ -364,6 +364,7 @@ public class DBControl {
 
                 String req_id = results.getString(1);
                 String req_desc = results.getString(2);
+                String req_1 = results.getString(3);
 
                 Element req_element = doc.createElement("requirement");
                 rootElement.appendChild(req_element);
@@ -375,6 +376,10 @@ public class DBControl {
                 Attr attr_desc = doc.createAttribute("description");
                 attr_desc.setValue(req_desc);
                 req_element.setAttributeNode(attr_desc);
+
+                Attr attr_req = doc.createAttribute("reqrelation");
+                attr_req.setValue(req_1);
+                req_element.setAttributeNode(attr_req);
 
                 //query from database
                 stmt_uc = conn.createStatement();
@@ -509,7 +514,7 @@ public class DBControl {
                 while (results_inc.next()) {
                     String ucname = results_inc.getString(2);
                     String inc_target = results_inc.getString(3);
-                    
+
                     Element relation = doc.createElement("relation");
                     relations.appendChild(relation);
 
@@ -539,7 +544,7 @@ public class DBControl {
                 while (results_inh.next()) {
                     String ucname = results_inh.getString(2);
                     String inh_target = results_inh.getString(3);
-                    
+
                     Element relation = doc.createElement("relation");
                     relations.appendChild(relation);
 
@@ -577,8 +582,8 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            //StreamResult result = new StreamResult(instance.readFolder() + "\\requirement.xml");
-            //transformer.transform(source, result);
+            StreamResult result = new StreamResult(instance.readFolder() + "\\requirement.xml");
+            transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
             transformer.transform(source, consoleResult);
@@ -738,8 +743,8 @@ public class DBControl {
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             DOMSource source = new DOMSource(doc);
 
-            //StreamResult result = new StreamResult(instance.readFolder() + "\\datadict.xml");
-            //transformer.transform(source, result);
+            StreamResult result = new StreamResult(instance.readFolder() + "\\datadict.xml");
+            transformer.transform(source, result);
             // Output to console for testing
             StreamResult consoleResult = new StreamResult(System.out);
             transformer.transform(source, consoleResult);
@@ -908,6 +913,7 @@ public class DBControl {
             stmt.execute("DELETE FROM inputdata");
             stmt.execute("DELETE FROM outputdata");
             stmt.close();
+
         } catch (SQLException ex) {
         } catch (Exception ex) {
         }
@@ -916,9 +922,9 @@ public class DBControl {
     public static void main(String[] args) {
         new DBControl().getConnectDB();
         //new DBControl().queryUsecaseProperties();
-        //new DBControl().deleteDataFromDatabase();
+        new DBControl().deleteDataFromDatabase();
         //new DBControl().queryRelation();
         //new DBControl().queryRequirement();
-        new DBControl().queryDatadict();
+        // new DBControl().queryDatadict();
     }
 }
