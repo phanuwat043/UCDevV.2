@@ -5,6 +5,7 @@
  */
 package com.ucdev.gen.report;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,8 +37,10 @@ import org.xml.sax.SAXException;
  */
 public class TransAtInfoHtmlRe{
     public void GenHTML(String linkpath,String imgpath,String filename) throws SAXException, IOException, ParserConfigurationException {
-        String pathXML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
-        File fXmlFile = new File(pathXML + "actor.xml"); //ดึงไฟล์ xml จาก path นี้
+        FileController path = new FileController();
+        String pathXML = path.getPathXML();
+        
+        File fXmlFile = new File(pathXML + "//actor.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -46,9 +49,6 @@ public class TransAtInfoHtmlRe{
         ArrayList actorName = new ArrayList();
         ArrayList actorDes = new ArrayList();
         ArrayList actorType = new ArrayList();
-        
-        System.out.println(linkpath);
-        System.out.println(imgpath);
         
         String createBodyHTML = "";
         String link = "<a href=\""+linkpath+"\">UseCaseinfo</a>";
@@ -143,9 +143,9 @@ public class TransAtInfoHtmlRe{
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-        String pathHTML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
+        String pathHTML = path.getPathHTML();
         String fullfilename = filename+".html";
-        File f = new File(pathHTML + fullfilename);
+        File f = new File(pathHTML + "//" + fullfilename);
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
