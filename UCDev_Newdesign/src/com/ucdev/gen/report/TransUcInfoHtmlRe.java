@@ -38,12 +38,19 @@ import org.xml.sax.SAXException;
  */
 public class TransUcInfoHtmlRe {
 
+<<<<<<< HEAD
     FileController instance = FileController.getInstance();
 
     public void GenHTML(String linkpath, String imgpath, String filename) throws ParserConfigurationException, SAXException, IOException {
         String pathXML = instance.getPathXML();
         String pathHTML = instance.getPathHTML();
         File fXmlFile = new File(pathXML + "\\usecase.xml"); //ดึงไฟล์ xml จาก path นี้
+=======
+    public void GenHTML(String linkpath, String imgpath, String filename) throws ParserConfigurationException, SAXException, IOException {
+        FileController path = new FileController();
+        String pathXML = path.getPathXML();
+        File fXmlFile = new File(pathXML + "//usecase.xml"); //ดึงไฟล์ xml จาก path นี้
+>>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -148,6 +155,15 @@ public class TransUcInfoHtmlRe {
                 + "   <h2>Usecase HTML Report</h2>\n"
                 + "</header>\n"
                 + "  \n"
+<<<<<<< HEAD
+=======
+                + "<nav>\n"
+                + "  <ul>\n"
+                + "    <li><p>Use Case</p></li>\n"
+                + "  </ul>\n"
+                + "</nav>\n"
+                + "\n"
+>>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
                 + createBodyHTML
                 + "\n"
                 + "<footer>Copyright UCDEV</footer>\n"
@@ -158,9 +174,15 @@ public class TransUcInfoHtmlRe {
                 + "</body>\n"
                 + "</html>";
 
+<<<<<<< HEAD
         //String pathHTML = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2_integrated\\UCDev_Newdesign\\";
         String fullfilename = filename + ".html";
         File f = new File(pathHTML + "\\" + fullfilename);
+=======
+        String pathHTML = path.getPathHTML();
+        String fullfilename = filename + ".html";
+        File f = new File(pathHTML + "//" + fullfilename);
+>>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));

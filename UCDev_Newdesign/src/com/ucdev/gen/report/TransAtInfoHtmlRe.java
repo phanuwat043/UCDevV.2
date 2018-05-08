@@ -39,9 +39,16 @@ import org.xml.sax.SAXException;
 public class TransAtInfoHtmlRe{
     FileController instance = FileController.getInstance();
     public void GenHTML(String linkpath,String imgpath,String filename) throws SAXException, IOException, ParserConfigurationException {
+<<<<<<< HEAD
         String pathXML = instance.getPathXML();
         String pathHTML = instance.getPathHTML();
         File fXmlFile = new File(pathXML + "\\actor.xml"); //ดึงไฟล์ xml จาก path นี้
+=======
+        FileController path = new FileController();
+        String pathXML = path.getPathXML();
+        
+        File fXmlFile = new File(pathXML + "//actor.xml"); //ดึงไฟล์ xml จาก path นี้
+>>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -50,9 +57,6 @@ public class TransAtInfoHtmlRe{
         ArrayList actorName = new ArrayList();
         ArrayList actorDes = new ArrayList();
         ArrayList actorType = new ArrayList();
-        
-        System.out.println(linkpath);
-        System.out.println(imgpath);
         
         String createBodyHTML = "";
         String link = "<a href=\""+linkpath+"\">UseCaseinfo</a>";
@@ -142,9 +146,15 @@ public class TransAtInfoHtmlRe{
                 + "\n"
                 + "</body>\n"
                 + "</html>";
+<<<<<<< HEAD
         
         String fullfilename = filename+".html";
         File f = new File(pathHTML +"\\"+ fullfilename);
+=======
+        String pathHTML = path.getPathHTML();
+        String fullfilename = filename+".html";
+        File f = new File(pathHTML + "//" + fullfilename);
+>>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
