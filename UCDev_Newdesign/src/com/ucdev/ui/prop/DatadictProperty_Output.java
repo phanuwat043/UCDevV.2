@@ -1,6 +1,13 @@
 package com.ucdev.ui.prop;
 
+import com.ucdev.db.control.DBControl;
+import static com.ucdev.db.control.DBControl.conn;
 import com.ucdev.table.datadict.TableOrdinalOutput;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -8,14 +15,32 @@ import com.ucdev.table.datadict.TableOrdinalOutput;
  */
 public class DatadictProperty_Output extends javax.swing.JPanel {
 
+    private final DBControl db_control = new DBControl();
     private final String uc_id;
     private final String uc_name;
+    private static Statement stmt = null;
 
     public DatadictProperty_Output(String id, String name) {
         initComponents();
 
         this.uc_id = id;
         this.uc_name = name;
+
+        DefaultListModel model = new DefaultListModel();
+        try {
+            db_control.getConnectDB();
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select * from nlp where uc_id='" + id + "'");
+            while (results.next()) {
+                String word = results.getString(2);
+                //System.out.println(word);
+                model.addElement(word);
+                word_recom_list.setModel(model);
+
+            }
+        } catch (SQLException ex) {
+
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -36,6 +61,11 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
 
         type_panel.setLayout(new java.awt.BorderLayout());
 
+        word_recom_list.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                word_recom_listMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(word_recom_list);
 
         type_combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Please select type...", "Ordinal" }));
@@ -101,6 +131,11 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
         type_panel.updateUI();
     }//GEN-LAST:event_type_comboActionPerformed
 
+    private void word_recom_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_word_recom_listMouseClicked
+
+        varname_txt.setText(word_recom_list.getSelectedValue());
+    }//GEN-LAST:event_word_recom_listMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -113,6 +148,10 @@ public class DatadictProperty_Output extends javax.swing.JPanel {
     private javax.swing.JTextField varname_txt;
     private javax.swing.JList<String> word_recom_list;
     // End of variables declaration//GEN-END:variables
+
+    public void nlpRecommend(String id) {
+
+    }
 
     public void getTableType() {
         switch (type_combo.getSelectedIndex()) {

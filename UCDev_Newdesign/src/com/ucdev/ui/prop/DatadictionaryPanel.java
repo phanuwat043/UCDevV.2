@@ -158,6 +158,7 @@ public class DatadictionaryPanel extends javax.swing.JPanel {
     private void add_outputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_outputActionPerformed
 
         output_panel.add(new DatadictProperty_Output(uc_id, uc_name));
+        //new DatadictProperty_Output(uc_id, uc_name).nlpRecommend(uc_id);
         output_panel.updateUI();
     }//GEN-LAST:event_add_outputActionPerformed
 

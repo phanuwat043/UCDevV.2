@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import opennlp.tools.cmdline.postag.POSModelLoader;
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
 //import opennlp.tools.cmdline.postag.POSModelLoader;
 //import opennlp.tools.postag.POSModel;
 //import opennlp.tools.postag.POSTaggerME;
@@ -618,8 +621,44 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
     }
 
     private Map event_flow_read() {
+
+        POSModel model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
+        POSTaggerME tagger = new POSTaggerME(model);
+
+        String uc_id = uc_id_txt.getText();
+        db_control.getConnectDB();
+
         for (int i = 0; i < event_table.getRowCount(); i++) {
             map.put(i, event_table.getValueAt(i, 0));
+
+            try {
+                stmt = db_control.conn.createStatement();
+                String tip = null;
+                String sent[] = null;
+                String tags[] = null;
+
+                tip = event_table.getValueAt(i, 0).toString();
+                String[] split = tip.split(" ");
+                String word_recom = "";
+
+                for (int k = 0; k < split.length; k++) {
+                    String[] word = new String[]{split[k]};
+                    for (int j = 0; j < word.length; j++) {
+                        sent = new String[]{word[j]};
+                        tags = tagger.tag(sent);
+
+                        for (String tag : tags) {
+                            if ("NN".equals(tag)) {
+                                word_recom = word[j];
+                                stmt.execute("insert into nlp values('" + uc_id + "','" + word_recom + "')");
+                            }
+                        }
+                    }
+                }
+                stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         return map;
     }
@@ -681,7 +720,6 @@ public class UsecasePropPanelForm extends javax.swing.JPanel {
 
         //POSModel model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
         //POSTaggerME tagger = new POSTaggerME(model);
-
         String tip = null;
         String sent[] = null;
         String tags[] = null;

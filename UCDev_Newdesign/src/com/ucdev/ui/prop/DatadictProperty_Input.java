@@ -1,7 +1,12 @@
 package com.ucdev.ui.prop;
 
+import com.ucdev.db.control.DBControl;
 import com.ucdev.table.datadict.TableOrdinalInput;
 import com.ucdev.table.datadict.TableRangeInput;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -9,14 +14,32 @@ import com.ucdev.table.datadict.TableRangeInput;
  */
 public class DatadictProperty_Input extends javax.swing.JPanel {
 
+    private final DBControl db_control = new DBControl();
     private final String uc_id;
     private final String uc_name;
+    private static Statement stmt = null;
 
     public DatadictProperty_Input(String id, String name) {
         initComponents();
 
         this.uc_id = id;
         this.uc_name = name;
+
+        DefaultListModel model = new DefaultListModel();
+        try {
+            db_control.getConnectDB();
+            stmt = DBControl.conn.createStatement();
+            ResultSet results = stmt.executeQuery("select * from nlp where uc_id='" + id + "'");
+            while (results.next()) {
+                String word = results.getString(2);
+                //System.out.println(word);
+                model.addElement(word);
+                word_recom_list.setModel(model);
+
+            }
+        } catch (SQLException ex) {
+
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -46,6 +69,11 @@ public class DatadictProperty_Input extends javax.swing.JPanel {
 
         type_panel.setLayout(new java.awt.BorderLayout());
 
+        word_recom_list.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                word_recom_listMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(word_recom_list);
 
         jLabel3.setText("Recommend");
@@ -101,6 +129,10 @@ public class DatadictProperty_Input extends javax.swing.JPanel {
         getTableType();
         type_panel.updateUI();
     }//GEN-LAST:event_type_comboActionPerformed
+
+    private void word_recom_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_word_recom_listMouseClicked
+        varname_txt.setText(word_recom_list.getSelectedValue());
+    }//GEN-LAST:event_word_recom_listMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -25,7 +25,7 @@ public class RequirementCategory {
         FileController path = new FileController();
         //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
         //File fXmlFile = new File(url); //For Test
-        File fXmlFile = new File(path.getPathXML() + "requirement.xml"); //ดึงไฟล์ xml จาก path นี้
+        File fXmlFile = new File(path.getPathXML() + "//requirement.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -110,7 +110,7 @@ public class RequirementCategory {
         String pathHTML = path.getPathHTML();
         //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\requirementcategories.html"; //For Test
         //File f = new File(urlTest); //For Test
-        File f = new File(pathHTML + "requirementcategories.html");
+        File f = new File(pathHTML + "//requirementcategories.html");
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
         if (f.canWrite()) {

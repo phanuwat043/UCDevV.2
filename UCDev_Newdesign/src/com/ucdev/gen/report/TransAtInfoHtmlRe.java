@@ -5,6 +5,7 @@
  */
 package com.ucdev.gen.report;
 
+import com.ucdev.save.control.FileController;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,9 +37,11 @@ import org.xml.sax.SAXException;
  * @author FilmKhonDee
  */
 public class TransAtInfoHtmlRe{
+    FileController instance = FileController.getInstance();
     public void GenHTML(String linkpath,String imgpath,String filename) throws SAXException, IOException, ParserConfigurationException {
-        String pathXML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
-        File fXmlFile = new File(pathXML + "actor.xml"); //ดึงไฟล์ xml จาก path นี้
+        String pathXML = instance.getPathXML();
+        String pathHTML = instance.getPathHTML();
+        File fXmlFile = new File(pathXML + "\\actor.xml"); //ดึงไฟล์ xml จาก path นี้
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(fXmlFile);
@@ -64,12 +68,13 @@ public class TransAtInfoHtmlRe{
             }
         }
  
+        createBodyHTML = createBodyHTML+ "<p>" + img + "</p>\n";
+        
         for (int temp = 0; temp < nList.getLength(); temp++) {//for list from arraylist
             String bodyForm = "<article>\n"
                     + "    <p> <strong> Actor Name </strong> : <i>" + actorName.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Description </strong> : <i>" + actorDes.get(temp) + "</i> </p>\n"
                     + "    <p> <strong> Type </strong> : <i>" + actorType.get(temp) + "</i> </p>\n"
-                    + "<p>" + img + "</p>\n"
                     + link
                     + "\n"
                     + "</article>";
@@ -125,14 +130,8 @@ public class TransAtInfoHtmlRe{
                 + "<div class=\"container\">\n"
                 + "\n"
                 + "<header>\n"
-                + "   <h1>UC DEV : use case development for supporting scenario-based requirement</h1>\n"
-                + "</header>\n"
-                + "  \n"
-                + "<nav>\n"
-                + "  <ul>\n"
-                + "    <li><p>Actor</p></li>\n"
-                + "  </ul>\n"
-                + "</nav>\n"
+                + "   <h2>Actor HTML Report</h2>\n"
+                + "</header>\n"    
                 + "\n"
                 +createBodyHTML
                 + "\n"
@@ -143,15 +142,15 @@ public class TransAtInfoHtmlRe{
                 + "\n"
                 + "</body>\n"
                 + "</html>";
-        String pathHTML = "C:\\Users\\Home\\Documents\\NetBeansProjects\\UCDev_Project_2\\";
+        
         String fullfilename = filename+".html";
-        File f = new File(pathHTML + fullfilename);
+        File f = new File(pathHTML +"\\"+ fullfilename);
 
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             if (f.canWrite()) {
-                //JOptionPane.showMessageDialog(null, "Generate Traceability Metrix Success!");
-                System.out.println("success!!!");
+                JOptionPane.showMessageDialog(null, "Generated usecase!");
+                //System.out.println("success!!!");
             }
             bw.write(html);
             bw.close();

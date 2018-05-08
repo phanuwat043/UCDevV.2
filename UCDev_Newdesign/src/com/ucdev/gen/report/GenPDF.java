@@ -10,12 +10,10 @@ package com.ucdev.gen.report;
  * @author Home
  */
 import com.itextpdf.text.DocumentException;
-import com.ucdev.gen.report.generatePDF;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 public class GenPDF extends javax.swing.JFrame {

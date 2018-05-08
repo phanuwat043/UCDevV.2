@@ -65,6 +65,12 @@ public class GenActor extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("File Name");
 
         jButton3.setText("Generate");
@@ -135,34 +141,10 @@ public class GenActor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileopen = new JFileChooser();
-        FileFilter  filter = new FileNameExtensionFilter("Text/CSV file","xml");
-        fileopen.addChoosableFileFilter(filter);
-        
-        int ret = fileopen.showDialog(null, "choose File");
-        if (ret == JFileChooser.APPROVE_OPTION){
-            jTextField1.setText(fileopen.getSelectedFile().toString());
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileopen = new JFileChooser();
-        FileFilter  filter = new FileNameExtensionFilter("Text/CSV file","xml");
-        fileopen.addChoosableFileFilter(filter);
-        
-        int ret = fileopen.showDialog(null, "choose File");
-        if (ret == JFileChooser.APPROVE_OPTION){
-            jTextField2.setText(fileopen.getSelectedFile().toString());
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         TransAtInfoHtmlRe a = new TransAtInfoHtmlRe();
-        
+
         try {
             a.GenHTML(jTextField1.getText(), jTextField2.getText(),jTextField3.getText());
         } catch (SAXException ex) {
@@ -173,6 +155,34 @@ public class GenActor extends javax.swing.JFrame {
             Logger.getLogger(GenActor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileopen = new JFileChooser();
+        FileFilter  filter = new FileNameExtensionFilter("Text/CSV file","xml");
+        fileopen.addChoosableFileFilter(filter);
+
+        int ret = fileopen.showDialog(null, "choose File");
+        if (ret == JFileChooser.APPROVE_OPTION){
+            jTextField2.setText(fileopen.getSelectedFile().toString());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileopen = new JFileChooser();
+        FileFilter  filter = new FileNameExtensionFilter("Text/CSV file","xml");
+        fileopen.addChoosableFileFilter(filter);
+
+        int ret = fileopen.showDialog(null, "choose File");
+        if (ret == JFileChooser.APPROVE_OPTION){
+            jTextField1.setText(fileopen.getSelectedFile().toString());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

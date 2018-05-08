@@ -5,34 +5,31 @@
  */
 package com.ucdev.gen.report;
 
-import java.io.File;
-import java.io.Reader;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FilterInputStream;
+import com.ucdev.save.control.FileController;
 
 /**
  *
  * @author Home
  */
 public class generatePDF {
-    public void GenPDF(String file,String filename) throws DocumentException, IOException{
+
+    public void GenPDF(String file, String filename) throws DocumentException, IOException {
         Document document = new Document();
-        String fullfilename = filename+".pdf";
+        FileController instance = FileController.getInstance();
+        String fullfilename = instance.getPathHTML() + "//" + filename + ".pdf";
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fullfilename));
         document.open();
         FileInputStream inputStream = new FileInputStream(file);
-        XMLWorkerHelper.getInstance().parseXHtml(writer, document, inputStream,null);
+        XMLWorkerHelper.getInstance().parseXHtml(writer, document, inputStream, null);
         document.close();
         System.out.println("PDF created!!!");
-        
+
     }
 }
