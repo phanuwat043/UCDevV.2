@@ -18,10 +18,10 @@ public final class DataDict_UI extends javax.swing.JFrame {
     private final DBControl dbControl = new DBControl();
     private static Statement stmt;
 
-    public DataDict_UI() {
+    public DataDict_UI(String id) {
         initComponents();
 
-        createUC();
+        createUC(id);
     }
 
     @SuppressWarnings("unchecked")
@@ -58,11 +58,11 @@ public final class DataDict_UI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    public void createUC() {
+    public void createUC(String id) {
         dbControl.getConnectDB();
         try {
             stmt = DBControl.conn.createStatement();
-            ResultSet results = stmt.executeQuery("select UC_ID,UC_NAME from usecase");
+            ResultSet results = stmt.executeQuery("select UC_ID,UC_NAME from usecase where UC_ID='" + id + "'");
             while (results.next()) {
                 GridLayout experimentLayout = new GridLayout(results.getRow(), 0);
                 jPanel1.setLayout(experimentLayout);

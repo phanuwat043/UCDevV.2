@@ -83,8 +83,7 @@ public class MainForm extends javax.swing.JFrame {
         jPanel1.add(panel);
         setEnableButton(false);
 
-<<<<<<< HEAD
-        export_report.setEnabled(false);
+        //export_report.setEnabled(false);
         export_requirement.setEnabled(false);
         showReqDesMenuItem.setEnabled(false);
         showTraceMatrixMenuItem.setEnabled(false);
@@ -92,10 +91,8 @@ public class MainForm extends javax.swing.JFrame {
         gen_usecase_jmenu.setEnabled(false);
         gen_pdf_jmenu.setEnabled(false);
         diagram_capture_jmenu.setEnabled(false);
-=======
-        showReqDesMenuItem.setEnabled(false);
+
         showTraceMatrixMenuItem.setEnabled(false);
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
 
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -144,8 +141,6 @@ public class MainForm extends javax.swing.JFrame {
         reqManageMenuItem = new javax.swing.JMenuItem();
         showTraceMatrixMenuItem = new javax.swing.JMenuItem();
         showReqDesMenuItem = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        data_dict_item = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("UCDev new design");
@@ -343,18 +338,6 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu3.setText("Datadictionary");
-
-        data_dict_item.setText("Datadict");
-        data_dict_item.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                data_dict_itemActionPerformed(evt);
-            }
-        });
-        jMenu3.add(data_dict_item);
-
-        jMenuBar1.add(jMenu3);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -422,16 +405,13 @@ public class MainForm extends javax.swing.JFrame {
         new DBControl().queryUsecaseProperties();
         new DBControl().queryRequirement();
         new DBControl().queryDatadict();
-<<<<<<< HEAD
-        
+
         createHtmlFile();
         captureDiagram();
-        
-        export_report.setEnabled(true);
-        export_requirement.setEnabled(true);
-=======
 
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
+        //export_report.setEnabled(true);
+        export_requirement.setEnabled(true);
+        
         showReqDesMenuItem.setEnabled(true);
         showTraceMatrixMenuItem.setEnabled(true);
         gen_actor_jmenu.setEnabled(true);
@@ -455,14 +435,8 @@ public class MainForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_gen_actor_jmenuActionPerformed
 
-<<<<<<< HEAD
-
-    private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
-        //openTraceabilityUI();
-=======
     private void TraceMatrix_jMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TraceMatrix_jMenuActionPerformed
 
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
     }//GEN-LAST:event_TraceMatrix_jMenuActionPerformed
 
     private void showTraceMatrixMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTraceMatrixMenuItemActionPerformed
@@ -472,34 +446,24 @@ public class MainForm extends javax.swing.JFrame {
             //String url = path.getPathHTML()+"\\traceabilitymatrix.html";
             File htmlFile = new File(instance.getPathHTML() + "\\traceabilitymatrix.html");
             Desktop.getDesktop().browse(htmlFile.toURI());
-<<<<<<< HEAD
 
         } catch (IOException ex) {
-        }
+
+    }                                                       
+
     }//GEN-LAST:event_showTraceMatrixMenuItemActionPerformed
 
-=======
-        } catch (IOException ex) {
-        }
-    }//GEN-LAST:event_showTraceMatrixMenuItemActionPerformed
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
 
     private void diagram_capture_jmenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_diagram_capture_jmenuActionPerformed
         captureDiagram();
     }//GEN-LAST:event_diagram_capture_jmenuActionPerformed
-
-    private void data_dict_itemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_data_dict_itemActionPerformed
-        openDatadictionary();
-    }//GEN-LAST:event_data_dict_itemActionPerformed
 
     private void export_requirementMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_export_requirementMouseClicked
 
     }//GEN-LAST:event_export_requirementMouseClicked
 
     private void export_requirementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_export_requirementActionPerformed
-<<<<<<< HEAD
-        //openTraceabilityUI();
-=======
+
         this.setDefaultCloseOperation(javax.swing.JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -516,7 +480,6 @@ public class MainForm extends javax.swing.JFrame {
                 }
             }
         });
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
     }//GEN-LAST:event_export_requirementActionPerformed
 
     private void reqManageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reqManageMenuItemActionPerformed
@@ -549,7 +512,6 @@ public class MainForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton actorBtn;
     private javax.swing.JButton associationBtn;
-    private javax.swing.JMenuItem data_dict_item;
     private javax.swing.JMenuItem diagram_capture_jmenu;
     private javax.swing.JMenuItem export_requirement;
     private javax.swing.JButton extendBtn;
@@ -561,7 +523,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenu jFile;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
@@ -655,11 +616,6 @@ public class MainForm extends javax.swing.JFrame {
         db_control.insertInheritRel(inh.getUc_first(), inh.getUc_second());
     }
 
-    private void openDatadictionary() {
-        datadict_ui = new DataDict_UI();
-        datadict_ui.show();
-    }
-
     private void genActorToHTML() {
         new GenActor().show();
     }
@@ -695,7 +651,6 @@ public class MainForm extends javax.swing.JFrame {
         reqManagement reqMan = new reqManagement();
         reqMan.show();
     }
-<<<<<<< HEAD
 
     private void createHtmlFile() {
         File f = null;
@@ -736,6 +691,4 @@ public class MainForm extends javax.swing.JFrame {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-=======
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
 }

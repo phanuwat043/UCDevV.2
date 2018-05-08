@@ -37,24 +37,15 @@ public class FileController {
         }
         return path;
     }
-<<<<<<< HEAD
     
     public String getPathImg() {
         String path = "";
         if (getFILE_NAME() != null) {
             path = "C:\\UCDev\\" + getFILE_NAME()+"\\Images";
-=======
-
-    public String getPathHTML() {
-        String path = "";
-        if (getFILE_NAME() != null) {
-            path = "C:\\UCDev\\" + getFILE_NAME() + "\\Documents";
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
         }
         return path;
     }
 
-<<<<<<< HEAD
     public String getPathHTML() {
         String path = "";
         if (getFILE_NAME() != null) {
@@ -62,9 +53,7 @@ public class FileController {
         }
         return path;
     }
-
-=======
->>>>>>> 04f12ea258de04955ae857ff753444a2eb700c8a
+    
     public void createFolder() {
         if (getFILE_NAME() != null) {
             Path path = Paths.get("C:\\UCDev\\" + getFILE_NAME() + "\\Documents");

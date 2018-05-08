@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import static javassist.CtMethod.ConstParameter.string;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,6 +23,12 @@ import org.xml.sax.SAXException;
  * @author 5730213057
  */
 public class RequirementCategory {
+    
+        ArrayList id = new ArrayList();
+        ArrayList des = new ArrayList();
+        ArrayList reqrel = new ArrayList();
+        
+        
     public void createRequirementCategory() throws ParserConfigurationException, SAXException, IOException {
         FileController path = new FileController();
         //String url = "C:\\Users\\5730213057\\Documents\\GitHub\\UCDev_2\\UCDevV.2\\UCDev_Newdesign\\requirement\\requirementXML\\requirement.xml"; //For Test
@@ -31,9 +39,7 @@ public class RequirementCategory {
         Document doc = dBuilder.parse(fXmlFile);
         doc.getDocumentElement().normalize();
         NodeList nList = doc.getElementsByTagName("requirement");
-        ArrayList id = new ArrayList();
-        ArrayList des = new ArrayList();
-        ArrayList reqrel = new ArrayList();
+       
         
 
         String trRow = "";
@@ -58,7 +64,8 @@ public class RequirementCategory {
             }
         }
                String firstColumn = "";
-               firstColumn = "<tr style='background-color: #4da6ff;color: white;font-family: sans-serif;'><th>Requirement ID</th><th>Requirements</th><th>Relation</th></tr>";
+               
+               firstColumn = "<tr style='background-color: #4da6ff;color: white;font-family: sans-serif;'><th>Requirement ID</th><th>Requirements</th>"+columnTrace()+"</tr>";
            
         
 
@@ -66,7 +73,7 @@ public class RequirementCategory {
         trList.add(firstColumn);
         for (int i = 0; i < id.size(); i++) {
             String linkToRelation = id.get(i) + ".html";
-            trRow = "<tr><td style='background-color: #CED8F6;color: white;font-family: sans-serif;'><a href='" + linkToRelation + "'>" + id.get(i) + "</a></td><td>" + des.get(i) + "</td><td>" + reqrel.get(i) + "</td></tr>";
+            trRow = "<tr><td style='background-color: #CED8F6;color: white;font-family: sans-serif;'><a href='" + linkToRelation + "'>" + id.get(i) + "</a></td><td>"+des.get(i)+"</td>"+createRow(reqrel.get(i).toString())+"</tr>";
             trList.add(trRow);
             trRow = "";
         }
@@ -108,7 +115,7 @@ public class RequirementCategory {
                 + resultTable
                 + "</table></body></html>";
         String pathHTML = path.getPathHTML();
-        //String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\requirementcategories.html"; //For Test
+       // String urlTest ="C:\\Users\\5730213057\\Documents\\TestUCDev\\requirementcategories.html"; //For Test
         //File f = new File(urlTest); //For Test
         File f = new File(pathHTML + "//requirementcategories.html");
 
@@ -117,7 +124,54 @@ public class RequirementCategory {
             JOptionPane.showMessageDialog(null, "Generated requirement description!");
         }
         bw.write(html);
-        bw.close();
-
-    }
+        bw.close(); 
+        }
+        
+       public String columnTrace(){
+               String colTrace = ""; 
+               for (int i = 0; i < id.size(); i++) {
+                    colTrace = colTrace+"<th>"+id.get(i)+"</th>";
+               }
+               return colTrace;
+        }
+       
+       public String createRow(String reqrel){
+               //reqrel[0] = REQ-1,REQ-3
+               String colTrace = "";
+              
+               //track type
+            List intCol = new ArrayList(); //ใช้ในการสร้างแถวจาก<td></td>
+            ArrayList splitDataReqRel = new ArrayList();
+            ArrayList numOfMatch = new ArrayList();
+            String[] parts = reqrel.split(",");
+            
+            for (int i = 0; i < parts.length; i++) { //splited add {REQ-1 REQ-3}
+                 splitDataReqRel.add(parts[i]);
+            }
+            
+            for (int i = 0; i < id.size(); i++) { //init column
+                intCol.add("<td></td>");
+            }
+            
+            for (int i = 0; i < id.size(); i++) {
+                for (int j = 0; j < splitDataReqRel.size(); j++) {
+                    if(id.get(i).equals(splitDataReqRel.get(j))){
+                       numOfMatch.add(i);
+                    }
+                }  
+            }
+           
+            for (int i = 0; i < numOfMatch.size(); i++) {
+                    int listColCom = numOfMatch.get(i).hashCode();
+                    intCol.set(listColCom, "<td>*</td>");//setตำแหน่งใน<td></td>ตามตำแหน่งที่ระบุไว้โดยใช้✓
+            }
+            
+            for (int i = 0; i < intCol.size(); i++) {
+                 colTrace = colTrace+intCol.get(i);
+            }
+            System.out.println("colTrace:"+colTrace);
+               return colTrace;
+        }
 }
+
+
